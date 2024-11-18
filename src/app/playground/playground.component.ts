@@ -29,6 +29,10 @@ export class PlaygroundComponent {
     this.updatedCode = this.code;
   }
 
+  addCaptureBase(event: Event) {
+    this.code = this.ocaService.addCaptureBase(this.updatedCode);
+  }
+
   async computeCaptureBaseDigest(event: Event) {
     this.code = await this.ocaService.computeDigests(this.updatedCode);
   }

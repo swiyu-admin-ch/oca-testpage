@@ -6,33 +6,60 @@ import canonicalize from 'canonicalize'
 })
 export class OCAService {
   private cesrDummy: string = "############################################";
+  private captureBaseDummy = {
+    type: "spec/capture_base/1.0",
+    digest: "############################################",
+    attributes: {
+      firstname: "Text",
+      lastname: "Text"
+    }
+  };
+  private nestedCaptureBaseDummy = {
+    type: "spec/capture_base/1.0",
+    digest: "############################################",
+    attributes: {
+      title: "Test",
+      items: "Array[refs:############################################]"
+    }
+  };
   constructor() { }
 
   initOCA(): string {
     return JSON.stringify({
-      capture_base: {
-        type: "spec/capture_base/1.0",
-        digest: "############################################",
-        attributes: {
-          firstname: "John",
-          lastname: "Smith"
-        }
-      },
+      capture_base: this.captureBaseDummy,
       overlays: []
     }, null, "\t");
   }
 
+  addCaptureBase(oca: string): string {
+    const ocaObj = JSON.parse(oca);
+
+    if(ocaObj.hasOwnProperty('capture_base')) {
+      ocaObj["capture_bases"] = [];
+      ocaObj["capture_bases"].push(ocaObj['capture_base']);
+      delete ocaObj['capture_base'];
+    }
+
+    ocaObj["capture_bases"].push(this.nestedCaptureBaseDummy)
+
+    return JSON.stringify(ocaObj, null, '\t');
+  }
+
   async computeDigests(oca: string): Promise<string> {
-    let ocaObj = JSON.parse(oca);
+    const ocaObj = JSON.parse(oca);
     
     if(ocaObj.hasOwnProperty('capture_base')) {
       const captureBase = ocaObj['capture_base'];
       captureBase.digest = this.cesrDummy;
       captureBase.digest = await this.computeSHA256CESRDigest(captureBase);
 
-      ocaObj["capture_base"] = captureBase;
-
     } else if(ocaObj.hasOwnProperty('capture_bases')) {
+      const captureBases = ocaObj['capture_bases'];
+
+      for(let i = 0; i < captureBases.length; i++) {
+        captureBases[i].digest = this.cesrDummy;
+        captureBases[i].digest = await this.computeSHA256CESRDigest(captureBases[i]);
+      }
 
     } else {
       throw Error("OCA has no valid Capture Base");
