@@ -14,8 +14,22 @@ import { OCAService } from '../services/oca/oca.service';
 })
 export class PlaygroundComponent {
   constructor(private ocaService: OCAService) {
-    this.code = this.ocaService.initOCA();
+    this.resetCode(null);
   }
 
   code = ''
+  updatedCode = ''
+
+  onCodeChanged(value: string) {
+    this.updatedCode = value;
+  }
+
+  resetCode(event: Event | null) {
+    this.code = this.ocaService.initOCA();
+    this.updatedCode = this.code;
+  }
+
+  async computeCaptureBaseDigest(event: Event) {
+    this.code = await this.ocaService.computeDigests(this.updatedCode);
+  }
 }

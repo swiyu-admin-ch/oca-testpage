@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CodeEditorComponent, CodeModel } from '@ngstack/code-editor';
 
 @Component({
@@ -14,12 +14,20 @@ export class EditorComponent {
     return ''
   }
   set code(newCode: string) {
-    this.codeModel.value = newCode;
-  } 
+    const clone = {...this.codeModel};
+    clone.value = newCode;
+    this.codeModel = clone;
+  }
+
+  @Output() codeChanged = new EventEmitter<string>();
 
   codeModel: CodeModel = {
     language: 'json',
     uri: 'file',
     value: this.code
   };
+
+  onCodeChanged(value: string) {
+    this.codeChanged.emit(value);
+  }
 }

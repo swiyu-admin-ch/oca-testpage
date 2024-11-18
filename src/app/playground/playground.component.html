@@ -2,11 +2,11 @@
     <div class="flex flex-col flex-1">
         <h2 class="text-2xl">Input</h2>
         <div class="mb-4">
-            <button class="mr-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">Reset</button>
-            <button class="mr-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">Compute digest</button>
+            <button (click)="resetCode($event)" class="mr-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">Reset</button>
+            <button (click)="computeCaptureBaseDigest($event)" class="mr-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">Compute digest</button>
             <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">Validate OCA</button>
         </div>
-        <app-editor class="flex-1" [code]="code"></app-editor>
+        <app-editor class="flex-1" [code]="code" (codeChanged)="onCodeChanged($event)"></app-editor>
     </div>
     <div class="flex flex-col flex-1">
         <h2 class="text-2xl">Output</h2>
