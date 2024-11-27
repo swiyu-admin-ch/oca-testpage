@@ -26,19 +26,13 @@ export class OCAService {
 
   initOCA(): string {
     return JSON.stringify({
-      capture_base: this.captureBaseDummy,
+      capture_bases: [this.captureBaseDummy],
       overlays: []
     }, null, "\t");
   }
 
   addCaptureBase(oca: string): string {
     const ocaObj = JSON.parse(oca);
-
-    if(ocaObj.hasOwnProperty('capture_base')) {
-      ocaObj["capture_bases"] = [];
-      ocaObj["capture_bases"].push(ocaObj['capture_base']);
-      delete ocaObj['capture_base'];
-    }
 
     ocaObj["capture_bases"].push(this.nestedCaptureBaseDummy)
 
@@ -48,12 +42,7 @@ export class OCAService {
   async computeDigests(oca: string): Promise<string> {
     const ocaObj = JSON.parse(oca);
     
-    if(ocaObj.hasOwnProperty('capture_base')) {
-      const captureBase = ocaObj['capture_base'];
-      captureBase.digest = this.cesrDummy;
-      captureBase.digest = await this.computeSHA256CESRDigest(captureBase);
-
-    } else if(ocaObj.hasOwnProperty('capture_bases')) {
+    if(ocaObj.hasOwnProperty('capture_bases')) {
       const captureBases = ocaObj['capture_bases'];
 
       for(let i = 0; i < captureBases.length; i++) {

@@ -2,10 +2,22 @@
     <div class="flex flex-col flex-1">
         <h2 class="text-2xl">Input</h2>
         <div class="mb-4">
-            <button (click)="resetCode($event)" class="mr-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">Reset</button>
+            <button (click)="reset($event)" class="mr-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">Reset</button>
+            <label class="text-gray-800">Load Example: </label>
+            <select [(ngModel)]="loadExampleState" (change)="loadExample($event)">
+                <option value=""></option>
+                <option value="person-id">Person ID</option>
+                <option value="pet-license">Pet License</option>
+            </select>
+        </div>
+        <app-editor class="flex-1" [code]="input" (codeChanged)="onInputChanged($event)"></app-editor>
+    </div>
+    <div class="flex flex-col flex-1">
+        <h2 class="text-2xl">OCA Bundle</h2>
+        <div class="mb-4">
             <button (click)="addCaptureBase($event)" class="mr-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">Add a Capture Base</button>
             <button (click)="computeCaptureBaseDigest($event)" class="mr-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">Compute digest</button>
-            <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">Validate OCA</button>
+            <button disabled class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">Validate OCA</button>
         </div>
         <app-editor class="flex-1" [code]="code" (codeChanged)="onCodeChanged($event)"></app-editor>
     </div>

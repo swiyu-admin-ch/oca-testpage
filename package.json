@@ -18,8 +18,9 @@
     "@angular/platform-browser": "^18.2.0",
     "@angular/platform-browser-dynamic": "^18.2.0",
     "@angular/router": "^18.2.0",
-    "@ngstack/code-editor": "^9.0.0",
     "canonicalize": "^2.0.0",
+    "monaco-editor": "^0.50.0",
+    "ngx-monaco-editor-v2": "^18.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.10"

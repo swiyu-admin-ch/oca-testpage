@@ -1,31 +1,33 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { CodeEditorComponent, CodeModel } from '@ngstack/code-editor';
+import { FormsModule } from '@angular/forms';
+import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 
 @Component({
   selector: 'app-editor',
   standalone: true,
-  imports: [CodeEditorComponent],
+  imports: [MonacoEditorModule, FormsModule],
   templateUrl: './editor.component.html',
   styleUrl: './editor.component.css'
 })
 export class EditorComponent {
   @Input() 
   get code(): string {
-    return ''
+    return '';
   }
   set code(newCode: string) {
-    const clone = {...this.codeModel};
-    clone.value = newCode;
-    this.codeModel = clone;
+    
+    this._code = newCode;
   }
 
-  @Output() codeChanged = new EventEmitter<string>();
-
-  codeModel: CodeModel = {
+  editorOptions = {
+    theme: 'vs-light',
     language: 'json',
-    uri: 'file',
-    value: this.code
+    minimap: {enabled: false},
+    scrollBeyondLastLine: false
   };
+  _code: string = "";
+
+  @Output() codeChanged = new EventEmitter<string>();
 
   onCodeChanged(value: string) {
     this.codeChanged.emit(value);

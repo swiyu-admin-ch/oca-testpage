@@ -1,1 +1,3 @@
-<ngs-code-editor class="h-full" [codeModel]="codeModel" (valueChanged)="onCodeChanged($event)"></ngs-code-editor>
+<div class="h-full">
+    <ngx-monaco-editor style="height:100%" class="code-editor" [options]="editorOptions" [(ngModel)]="_code" (ngModelChange)="onCodeChanged($event)"></ngx-monaco-editor>
+</div>
