@@ -64,10 +64,10 @@ export class OCAService {
     return JSON.stringify(ocaObj, null, '\t');
   }
 
-  getOverlay(oca: string, overlay: Overlays, language: string) {
+  getOverlay(oca: string, overlay: Overlays, language: string = 'en') {
     const ocaObj = JSON.parse(oca);
 
-    const rootCaptureBase = this.getRootCaptureBase(ocaObj);
+    const rootCaptureBase = this._getRootCaptureBase(ocaObj);
     const rootDigest = rootCaptureBase.digest;
 
     return this.getOverlayByDigest(ocaObj, overlay, language, rootDigest);
@@ -87,6 +87,7 @@ export class OCAService {
       case Overlays.LABEL:
         break;
       case Overlays.DATA_SOURCE:
+        return overlays.find((o: {[x: string]: string;}) => o['type'] === "extend/overlays/data_source/1.0" && o['capture_base'] === digest && o['format'] === 'json');
         break;
       case Overlays.BRANDING:
         return overlays.find((o: {[x: string]: string;}) => o['type'] === "aries/overlays/branding/1.1" && o['capture_base'] === digest && o['language'] === language);
@@ -94,7 +95,12 @@ export class OCAService {
     }
   }
 
-  private getRootCaptureBase(ocaObj: any): any {
+  getRootCaptureBase(oca: string) {
+    const ocaObj = JSON.parse(oca);
+    return this._getRootCaptureBase(ocaObj)
+  }
+
+  private _getRootCaptureBase(ocaObj: any): any {
     if(ocaObj.hasOwnProperty('capture_bases')) {
       const captureBases = ocaObj['capture_bases'];
 

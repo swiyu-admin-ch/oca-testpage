@@ -38,10 +38,12 @@ export class PlaygroundComponent {
 
   onInputChanged(value: string) {
     this.updatedInput = value;
+    this.loadViewRenderer(null);
   }
 
   onCodeChanged(value: string) {
     this.updatedOCA = value;
+    this.loadViewRenderer(null);
   }
 
   loadExample(event: Event) {
@@ -55,8 +57,9 @@ export class PlaygroundComponent {
     if(example != null) {
       this.input = JSON.stringify(example.input, null, '\t');
       this.oca = JSON.stringify(example.oca, null, '\t');
+      this.updatedInput = this.input;
+      this.updatedOCA = this.oca;
       this.viewRenderState = "vc-preview";
-      this.loadViewRenderer(null);
     }
   }
 
@@ -76,8 +79,8 @@ export class PlaygroundComponent {
     }
 
     if(viewComponent != null) {
-      viewComponent.setInput('input', this.input);
-      viewComponent.setInput('oca', this.oca);
+      viewComponent.setInput('input', this.updatedInput);
+      viewComponent.setInput('oca', this.updatedOCA);
     }
   }
 
