@@ -24,14 +24,16 @@
     <div class="flex flex-col flex-1">
         <h2 class="text-2xl">Output</h2>
         <div>
-            <select>
-                <option>VC Preview</option>
-                <option>VC List</option>
-                <option>VC Detail</option>
+            <label class="text-gray-800">Load View: </label>
+            <select [(ngModel)]="viewRenderState" (change)="loadViewRenderer($event)">
+                <option value=""></option>
+                <option value="vc-preview">VC Preview</option>
+                <option value="vc-list">VC List</option>
+                <option value="vc-detail">VC Detail</option>
             </select>
         </div>
         <div class="flex flex-1 justify-center items-center">
-            <span class="">No Renderer available</span>
+            <ng-container #viewRenderComponent></ng-container>
         </div>
     </div>
 </main>
