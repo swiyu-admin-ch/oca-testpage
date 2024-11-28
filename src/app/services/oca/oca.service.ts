@@ -1,6 +1,13 @@
 import { Injectable } from '@angular/core';
 import canonicalize from 'canonicalize'
 
+export enum Overlays {
+  LABEL,
+  META,
+  BRANDING,
+  DATA_SOURCE
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -55,6 +62,75 @@ export class OCAService {
     }
 
     return JSON.stringify(ocaObj, null, '\t');
+  }
+
+  getOverlay(oca: string, overlay: Overlays, language: string) {
+    const ocaObj = JSON.parse(oca);
+
+    const rootCaptureBase = this.getRootCaptureBase(ocaObj);
+    const rootDigest = rootCaptureBase.digest;
+
+    return this.getOverlayByDigest(ocaObj, overlay, language, rootDigest);
+  }
+
+  getOverlayByDigest(ocaObj: any, overlay: Overlays, language: string, digest: string) {
+    if(!ocaObj.hasOwnProperty("overlays")) {
+      throw Error("OCA has no overlays!")
+    }
+
+    const overlays = ocaObj.overlays;
+
+    switch(overlay) {
+      case Overlays.META:
+        return overlays.find((o: {[x: string]: string;}) => o['type'] === "spec/overlays/meta/1.0" && o['capture_base'] === digest && o['language'] === language);
+        break;
+      case Overlays.LABEL:
+        break;
+      case Overlays.DATA_SOURCE:
+        break;
+      case Overlays.BRANDING:
+        return overlays.find((o: {[x: string]: string;}) => o['type'] === "aries/overlays/branding/1.1" && o['capture_base'] === digest && o['language'] === language);
+        break;
+    }
+  }
+
+  private getRootCaptureBase(ocaObj: any): any {
+    if(ocaObj.hasOwnProperty('capture_bases')) {
+      const captureBases = ocaObj['capture_bases'];
+
+      if(captureBases.length < 1) {
+        throw Error("OCA has no valid Capture Base");
+      } else if(captureBases.length == 1) {
+        return captureBases[0];
+      } else {
+        for(let i = 0; i < captureBases.length; i++) {
+          const rootCaptureBases = captureBases.filter((c: { hasOwnProperty: (arg0: string) => any; attributes: { [x: string]: string; }; }) => {
+            if(!c.hasOwnProperty("attributes")) return false;
+            
+            for(const key in c.attributes) {
+              const value = c.attributes[key];
+
+              if(value.startsWith("refs:") || value.startsWith("Array[refs:")) {
+                return false;
+              }
+            }
+            return true;
+          });
+
+          if(rootCaptureBases.length == 0) {
+            throw Error("OCA has no valid Capture Base");
+          }
+
+          if(rootCaptureBases > 1) {
+            throw Error("OCA can only have one root Capture Base");
+          }
+
+          return rootCaptureBases[0];
+        }
+      }
+    } else {
+      throw Error("OCA has no valid Capture Base");
+    }
   }
 
   // see https://github.com/e-id-admin/open-source-community/blob/main/tech-roadmap/rfcs/oca/appendixes/cesr-sha256-encoder.md

@@ -23,8 +23,8 @@ export class PlaygroundComponent {
   input = '{}';
   updatedInput = '';
 
-  code = '';
-  updatedCode = '';
+  oca = '';
+  updatedOCA = '';
 
   // Fields
 
@@ -41,7 +41,7 @@ export class PlaygroundComponent {
   }
 
   onCodeChanged(value: string) {
-    this.updatedCode = value;
+    this.updatedOCA = value;
   }
 
   loadExample(event: Event) {
@@ -54,7 +54,7 @@ export class PlaygroundComponent {
 
     if(example != null) {
       this.input = JSON.stringify(example.input, null, '\t');
-      this.code = JSON.stringify(example.oca, null, '\t');
+      this.oca = JSON.stringify(example.oca, null, '\t');
       this.viewRenderState = "vc-preview";
       this.loadViewRenderer(null);
     }
@@ -62,34 +62,40 @@ export class PlaygroundComponent {
 
   loadViewRenderer(event: Event | null) {
     this.viewRenderComponent?.clear()
+    let viewComponent = null;
     switch(this.viewRenderState) {
       case "vc-preview":
-        this.viewRenderComponent?.createComponent(VcPreviewComponent);
+        viewComponent = this.viewRenderComponent?.createComponent(VcPreviewComponent);
         break;
       case "vc-list":
-        this.viewRenderComponent?.createComponent(VcListComponent);
+        viewComponent = this.viewRenderComponent?.createComponent(VcListComponent);
         break;
       case "vc-detail":
-        this.viewRenderComponent?.createComponent(VcDetailComponent);
+        viewComponent = this.viewRenderComponent?.createComponent(VcDetailComponent);
         break;
+    }
+
+    if(viewComponent != null) {
+      viewComponent.setInput('input', this.input);
+      viewComponent.setInput('oca', this.oca);
     }
   }
 
   reset(event: Event | null) {
-    this.code = this.ocaService.initOCA();
+    this.oca = this.ocaService.initOCA();
     this.input = '{}';
     this.updatedInput = this.input
-    this.updatedCode = this.code;
+    this.updatedOCA = this.oca;
     this.loadExampleState = "";
     this.viewRenderState = "";
     this.viewRenderComponent?.clear();
   }
 
   addCaptureBase(event: Event) {
-    this.code = this.ocaService.addCaptureBase(this.updatedCode);
+    this.oca = this.ocaService.addCaptureBase(this.updatedOCA);
   }
 
   async computeCaptureBaseDigest(event: Event) {
-    this.code = await this.ocaService.computeDigests(this.updatedCode);
+    this.oca = await this.ocaService.computeDigests(this.updatedOCA);
   }
 }

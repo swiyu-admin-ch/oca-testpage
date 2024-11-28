@@ -11,9 +11,6 @@ import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 })
 export class EditorComponent {
   @Input() 
-  get code(): string {
-    return '';
-  }
   set code(newCode: string) {
     
     this._code = newCode;

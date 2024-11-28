@@ -76,6 +76,15 @@ export class DataService {
               address_street: "$.address.street",
               address_country: "$.address.country",
             }
+          },
+          {
+            type: "aries/overlays/branding/1.1",
+            capture_base: "IHlGw+Ud8t+H/vUTU2vOro0XjrBKEeNBcl6lLSOb/G+H",
+            language: "en",
+            theme: "light",
+            logo: "",
+            primary_background: "#FBB0B0",
+            primary_field: "{{firstname}} {{lastname}}"
           }
         ]
       }
