@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { OCAService, Overlays } from '../../services/oca/oca.service';
 import JsonPath from '../../utils/JsonPath';
+import Colors from '../../utils/Colors';
 
 @Component({
   selector: 'app-vc-preview',
@@ -17,6 +18,7 @@ export class VcPreviewComponent implements OnInit {
   vcSubtitle = "";
   vcLogo = "";
   vcPrimaryBackground = "";
+  vcFontColor = "";
 
   constructor(private ocaService: OCAService) {}
 
@@ -27,10 +29,8 @@ export class VcPreviewComponent implements OnInit {
     const branding = this.ocaService.getOverlay(this.oca, Overlays.BRANDING, "en");
     const dataSource = this.ocaService.getOverlay(this.oca, Overlays.DATA_SOURCE);
 
-    // FIXME: DOES ONLY WORK IF THE SAME ATTRIBUTES ARE IN CAPTURE BASE AND DATASOURCE!
     let mappedValues: {[x: string]: any;} = {};
     for(const key in captureBase.attributes) {
-      const value = captureBase.attributes[key];
       mappedValues[key] = JsonPath.query(this.input, dataSource.attribute_sources[key]);
     }
 
@@ -40,6 +40,7 @@ export class VcPreviewComponent implements OnInit {
     if(branding) {
       this.vcLogo = branding.logo;
       this.vcPrimaryBackground = branding.primary_background;
+      this.vcFontColor = Colors.isDarkColor(branding.primary_background) ? "#FFFFFF" : "#000000";
       this.vcSubtitle = branding.primary_field.replace(/\{\{(.*?)\}\}/g, (_: any, p1: string) => mappedValues.hasOwnProperty(p1) ? mappedValues[p1]: '');
     }
   }
