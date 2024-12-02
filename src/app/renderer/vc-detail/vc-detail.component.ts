@@ -14,11 +14,6 @@ export class VcDetailComponent {
   @Input({required: true}) input!: string;
   @Input({required: true}) oca!: string;
 
-  vcName = "";
-  vcSubtitle = "";
-  vcLogo = "";
-  vcPrimaryBackground = "";
-  vcFontColor = "";
   vcDisplay: Array<{type:string, value:string}> = [];
 
   constructor(private ocaService: OCAService) {}
@@ -26,8 +21,6 @@ export class VcDetailComponent {
   // FIXME: Error handling
   ngOnInit() {
     const captureBase = this.ocaService.getRootCaptureBase(this.oca);
-    const meta = this.ocaService.getOverlay(this.oca, Overlays.META, "en");
-    const branding = this.ocaService.getOverlay(this.oca, Overlays.BRANDING, "en");
     const dataSource = this.ocaService.getOverlay(this.oca, Overlays.DATA_SOURCE);
     const labels = this.ocaService.getOverlay(this.oca, Overlays.LABEL);
     const clusterOrdering = this.ocaService.getOverlay(this.oca, Overlays.CLUSTER_ORDERING);
@@ -39,15 +32,6 @@ export class VcDetailComponent {
       mappedValues[key] = queryResult.length > 0 ? queryResult[0] : '';
     }
 
-    if(meta) {
-      this.vcName = meta.name;
-    }
-    if(branding) {
-      this.vcLogo = branding.logo;
-      this.vcPrimaryBackground = branding.primary_background;
-      this.vcFontColor = Colors.isDarkColor(branding.primary_background) ? "#FFFFFF" : "#000000";
-      this.vcSubtitle = branding.primary_field.replace(/\{\{(.*?)\}\}/g, (_: any, p1: string) => mappedValues.hasOwnProperty(p1) ? mappedValues[p1]: '');
-    }
     if(clusterOrdering) {
       const clusterOrdered = Object.keys(clusterOrdering["cluster_order"]).sort((a,b) => clusterOrdering["cluster_order"][a] - clusterOrdering["cluster_order"][b]);
       
