@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { OCAService, Overlays } from '../../services/oca/oca.service';
 import JsonPath from '../../utils/JsonPath';
+import Colors from '../../utils/Colors';
 
 @Component({
   selector: 'app-vc-list',
@@ -16,7 +17,8 @@ export class VcListComponent {
   vcName = "";
   vcSubtitle = "";
   vcLogo = "";
-  vcPrimaryBackground = "";
+  vcPrimaryBackgroundStart = "";
+  vcPrimaryBackgroundEnd = "";
 
   constructor(private ocaService: OCAService) {}
 
@@ -37,7 +39,8 @@ export class VcListComponent {
     }
     if(branding) {
       this.vcLogo = branding.logo;
-      this.vcPrimaryBackground = branding.primary_background;
+      this.vcPrimaryBackgroundEnd = branding.primary_background;
+      this.vcPrimaryBackgroundStart = Colors.darken(branding.primary_background, 35);
       this.vcSubtitle = branding.primary_field.replace(/\{\{(.*?)\}\}/g, (_: any, p1: string) => mappedValues.hasOwnProperty(p1) ? mappedValues[p1]: '');
     }
   }
