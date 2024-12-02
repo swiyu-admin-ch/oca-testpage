@@ -56,13 +56,20 @@ export class VcDetailComponent {
         const attributesOrdered = Object.keys(clusterOrdering["attribute_cluster_order"][clusterValue]).sort((a,b) => clusterOrdering["attribute_cluster_order"][clusterValue][a] - clusterOrdering["attribute_cluster_order"][clusterValue][b])
         for(const attributeKey in attributesOrdered) {
           const attributeValue = attributesOrdered[attributeKey];
+          this.vcDisplay.push({type: "label", value: labels["attribute_labels"][attributeValue]});
           switch(captureBase["attributes"][attributeValue]) {
             case "Text":
-              this.vcDisplay.push({type: "label", value: labels["attribute_labels"][attributeValue]});
               this.vcDisplay.push({type: "text", value: mappedValues[attributeValue]});
               //FIXME missing Data URL use case
               break;
             case "DateTime":
+              const timestamp = Date.parse(mappedValues[attributeValue]);
+              if(!isNaN(timestamp)) {
+                const date = new Date(timestamp);
+                this.vcDisplay.push({type: "text", value: `${date.getDate()}.${date.getMonth()+1}.${date.getFullYear()}`});
+              }
+              break;
+
             case "refs:":
             case "Array[refs:":
               //FIXME Missing implementation
