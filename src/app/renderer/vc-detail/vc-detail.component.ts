@@ -30,7 +30,8 @@ export class VcDetailComponent {
     const branding = this.ocaService.getOverlay(this.oca, Overlays.BRANDING, "en");
     const dataSource = this.ocaService.getOverlay(this.oca, Overlays.DATA_SOURCE);
     const labels = this.ocaService.getOverlay(this.oca, Overlays.LABEL);
-    const clusterOrdering = this.ocaService.getOverlay(this.oca, Overlays.CLUSTER_ORDERING)
+    const clusterOrdering = this.ocaService.getOverlay(this.oca, Overlays.CLUSTER_ORDERING);
+    const standard = this.ocaService.getOverlay(this.oca, Overlays.STANDARD);
 
     let mappedValues: {[x: string]: any;} = {};
     for(const key in captureBase.attributes) {
@@ -59,8 +60,11 @@ export class VcDetailComponent {
           this.vcDisplay.push({type: "label", value: labels["attribute_labels"][attributeValue]});
           switch(captureBase["attributes"][attributeValue]) {
             case "Text":
-              this.vcDisplay.push({type: "text", value: mappedValues[attributeValue]});
-              //FIXME missing Data URL use case
+              if(standard && standard["attr_standards"][attributeValue] === "urn:ietf:rfc:2397") {
+                this.vcDisplay.push({type: "image", value: mappedValues[attributeValue]});
+              } else {
+                this.vcDisplay.push({type: "text", value: mappedValues[attributeValue]});
+              }
               break;
             case "DateTime":
               const timestamp = Date.parse(mappedValues[attributeValue]);

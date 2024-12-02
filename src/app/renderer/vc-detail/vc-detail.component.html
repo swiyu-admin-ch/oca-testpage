@@ -10,6 +10,11 @@
             @case ("text") {
                 <span class="ml-4 pb-2 border-b">{{displayItem.value}}</span>
             }
+            @case ("image") {
+                <div class="ml-4 pb-2 border-b">
+                    <img class="w-16" [src]="displayItem.value"/>
+                </div>
+            }
         }
     }
 </div>
