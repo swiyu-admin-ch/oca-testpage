@@ -5,7 +5,8 @@ export enum Overlays {
   LABEL,
   META,
   BRANDING,
-  DATA_SOURCE
+  DATA_SOURCE,
+  CLUSTER_ORDERING
 }
 
 @Injectable({
@@ -85,9 +86,13 @@ export class OCAService {
         return overlays.find((o: {[x: string]: string;}) => o['type'] === "spec/overlays/meta/1.0" && o['capture_base'] === digest && o['language'] === language);
         break;
       case Overlays.LABEL:
+        return overlays.find((o: {[x: string]: string;}) => o['type'] === "spec/overlays/label/1.0" && o['capture_base'] === digest && o['language'] === language);
         break;
       case Overlays.DATA_SOURCE:
         return overlays.find((o: {[x: string]: string;}) => o['type'] === "extend/overlays/data_source/1.0" && o['capture_base'] === digest && o['format'] === 'json');
+        break;
+      case Overlays.CLUSTER_ORDERING:
+        return overlays.find((o: {[x: string]: string;}) => o['type'] === "extend/overlays/cluster_ordering/1.0" && o['capture_base'] === digest && o['language'] === language);
         break;
       case Overlays.BRANDING:
         return overlays.find((o: {[x: string]: string;}) => o['type'] === "aries/overlays/branding/1.1" && o['capture_base'] === digest && o['language'] === language);

@@ -1,1 +1,15 @@
-<p>vc-detail works!</p>
+<div class="min-w-80 flex flex-col">
+    @for(displayItem of vcDisplay; track $index) {
+        @switch (displayItem.type) {
+            @case ("title") {
+                <span class="p-4 pt-8 border-b text-2xl">{{displayItem.value}}</span>
+            }
+            @case ("label") {
+                <span class="ml-4 pt-2 text-gray-600 text-sm">{{displayItem.value}}</span>
+            }
+            @case ("text") {
+                <span class="ml-4 pb-2 border-b">{{displayItem.value}}</span>
+            }
+        }
+    }
+</div>
