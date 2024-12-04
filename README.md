@@ -3,6 +3,8 @@
 This project proposes an interactive playground to test OCA to visualize Verifiable Credentials.
 The playground follows the following technical specifications: [VC visualization with OCA](https://github.com/e-id-admin/open-source-community/blob/main/tech-roadmap/rfcs/oca/spec.md).
 
+![OCA Tool Screenshot](./images/screenshot-2024-12-04.png)
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.12.
 
 ## Feature Roadmap
