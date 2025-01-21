@@ -7,6 +7,7 @@
             <select [(ngModel)]="loadExampleState" (change)="loadExample($event)">
                 <option value=""></option>
                 <option value="person-id">Person ID</option>
+                <option value="pets">Pet Permit</option>
             </select>
         </div>
         <app-editor class="flex-1" [code]="input" (codeChanged)="onInputChanged($event)"></app-editor>

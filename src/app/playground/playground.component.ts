@@ -52,6 +52,9 @@ export class PlaygroundComponent {
       case "person-id":
         example = this.dataService.getPersonExample();
         break;
+      case "pets":
+        example = this.dataService.getPetsExample();
+        break;
     }
 
     if(example != null) {

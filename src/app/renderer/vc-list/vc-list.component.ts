@@ -39,8 +39,8 @@ export class VcListComponent {
     }
     if(branding) {
       this.vcLogo = branding.logo;
-      this.vcPrimaryBackgroundEnd = branding.primary_background;
-      this.vcPrimaryBackgroundStart = Colors.darken(branding.primary_background, 35);
+      this.vcPrimaryBackgroundEnd = branding.primary_background_color;
+      this.vcPrimaryBackgroundStart = Colors.darken(branding.primary_background_color, 35);
       this.vcSubtitle = branding.primary_field.replace(/\{\{(.*?)\}\}/g, (_: any, p1: string) => mappedValues.hasOwnProperty(p1) ? mappedValues[p1]: '');
     }
   }

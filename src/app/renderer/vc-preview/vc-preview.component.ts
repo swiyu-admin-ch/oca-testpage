@@ -40,9 +40,9 @@ export class VcPreviewComponent implements OnInit {
     }
     if(branding) {
       this.vcLogo = branding.logo;
-      this.vcPrimaryBackgroundEnd = branding.primary_background;
-      this.vcPrimaryBackgroundStart = Colors.darken(branding.primary_background, 35);
-      this.vcFontColor = Colors.isDarkColor(branding.primary_background) ? "#FFFFFF" : "#000000";
+      this.vcPrimaryBackgroundEnd = branding.primary_background_color;
+      this.vcPrimaryBackgroundStart = Colors.darken(branding.primary_background_color, 35);
+      this.vcFontColor = Colors.isDarkColor(branding.primary_background_color) ? "#FFFFFF" : "#000000";
       this.vcSubtitle = branding.primary_field.replace(/\{\{(.*?)\}\}/g, (_: any, p1: string) => mappedValues.hasOwnProperty(p1) ? mappedValues[p1]: '');
     }
   }
