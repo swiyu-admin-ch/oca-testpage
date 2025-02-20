@@ -8,12 +8,15 @@
                 <span class="ml-4 pt-2 text-gray-600 text-sm">{{displayItem.value}}</span>
             }
             @case ("text") {
-                <span class="ml-4 pb-2 border-b">{{displayItem.value}}</span>
+                <span class="ml-4 pb-2">{{displayItem.value}}</span>
             }
             @case ("image") {
-                <div class="ml-4 pb-2 border-b">
+                <div class="ml-4 pb-2">
                     <img class="w-16" [src]="displayItem.value"/>
                 </div>
+            }
+            @case ("divider") {
+                <span class="ml-4 pb-2 border-b-4"></span>
             }
         }
     }

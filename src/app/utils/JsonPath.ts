@@ -2,7 +2,7 @@
 * only support:
 * - '$' root element
 * 
-* TODO: support for arrays
+* FIXME: support for arrays
 */
 export default class JsonPath {
     static query(input: string, query: string)  {

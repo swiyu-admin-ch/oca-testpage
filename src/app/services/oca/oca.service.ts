@@ -72,10 +72,45 @@ export class OCAService {
     const rootCaptureBase = this._getRootCaptureBase(ocaObj);
     const rootDigest = rootCaptureBase.digest;
 
-    return this.getOverlayByDigest(ocaObj, overlay, language, rootDigest);
+    return this._getOverlayByDigest(ocaObj, overlay, language, rootDigest);
   }
 
-  getOverlayByDigest(ocaObj: any, overlay: Overlays, language: string, digest: string) {
+  getOverlayByDigest(oca: string, overlay: Overlays, language: string, digest: string) {
+    const ocaObj = JSON.parse(oca);
+
+    return this._getOverlayByDigest(ocaObj, overlay, language, digest);
+  }
+
+  getCaptureBaseByDigest(oca: string, digest: string) {
+    const ocaObj = JSON.parse(oca);
+
+    if(!ocaObj.hasOwnProperty('capture_bases')) {
+      throw Error("OCA has no valid Capture Base");
+    }
+
+    const captureBases = ocaObj['capture_bases'];
+
+    const filteredCaptureBase = captureBases.filter((c: any) => {
+      if(!c.hasOwnProperty("digest")) return false;
+
+      return c['digest'] === digest;
+    });
+    
+    if(filteredCaptureBase.length < 1) {
+      throw Error("OCA has multiple Capture Bases with the same digests");
+    } else if(filteredCaptureBase.length == 1) {
+      return filteredCaptureBase[0];
+    } else {
+      throw Error(`OCA has no Capture Base with the following digest: ${digest}`);
+    }
+  }
+
+  getRootCaptureBase(oca: string) {
+    const ocaObj = JSON.parse(oca);
+    return this._getRootCaptureBase(ocaObj)
+  }
+
+  private _getOverlayByDigest(ocaObj: any, overlay: Overlays, language: string, digest: string) {
     if(!ocaObj.hasOwnProperty("overlays")) {
       throw Error("OCA has no overlays!")
     }
@@ -104,11 +139,6 @@ export class OCAService {
     }
   }
 
-  getRootCaptureBase(oca: string) {
-    const ocaObj = JSON.parse(oca);
-    return this._getRootCaptureBase(ocaObj)
-  }
-
   private _getRootCaptureBase(ocaObj: any): any {
     if(ocaObj.hasOwnProperty('capture_bases')) {
       const captureBases = ocaObj['capture_bases'];
@@ -119,24 +149,51 @@ export class OCAService {
         return captureBases[0];
       } else {
         for(let i = 0; i < captureBases.length; i++) {
-          const rootCaptureBases = captureBases.filter((c: { hasOwnProperty: (arg0: string) => any; attributes: { [x: string]: string; }; }) => {
+          // TODO too much loops can surely be simplified
+          const captureBaseWithReferences = captureBases.filter((c: { hasOwnProperty: (arg0: string) => any; attributes: { [x: string]: string; }; }) => {
             if(!c.hasOwnProperty("attributes")) return false;
             
             for(const key in c.attributes) {
               const value = c.attributes[key];
 
               if(value.startsWith("refs:") || value.startsWith("Array[refs:")) {
-                return false;
+                return true;
               }
             }
-            return true;
+            return false;
           });
+
+          let rootCaptureBases = [];
+          // check for root capture bases.
+          // TODO could be optimized with internal storage
+          for(let i = 0; i < captureBaseWithReferences.length; i++) {
+            const currentDigest = captureBaseWithReferences[i];
+            
+            const referringCaptureBases = captureBaseWithReferences.filter((c: { attributes: { [x: string]: string; }; }) => {
+              for(const key in c.attributes) {
+                const value = c.attributes[key];
+  
+                if(value.startsWith("refs:") || value.startsWith("Array[refs:")) {
+                  if(value.includes(currentDigest)) {
+                    return true;
+                  }
+                }
+              }
+              return false;
+
+            });
+
+            if(referringCaptureBases.length == 0) {
+              rootCaptureBases.push(captureBaseWithReferences[i]);
+            }
+          }
+
 
           if(rootCaptureBases.length == 0) {
             throw Error("OCA has no valid Capture Base");
           }
 
-          if(rootCaptureBases > 1) {
+          if(rootCaptureBases.length > 1) {
             throw Error("OCA can only have one root Capture Base");
           }
 

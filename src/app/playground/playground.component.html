@@ -1,5 +1,5 @@
-<main class="h-full flex">
-    <div class="flex flex-col flex-1">
+<main class="h-full grid grid-cols-3 grid-rows-1 gap-0">
+    <div class="flex flex-col">
         <h2 class="text-2xl">Input</h2>
         <div class="mb-4">
             <button (click)="reset($event)" class="mr-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">Reset</button>
@@ -12,7 +12,7 @@
         </div>
         <app-editor class="flex-1" [code]="input" (codeChanged)="onInputChanged($event)"></app-editor>
     </div>
-    <div class="flex flex-col flex-1">
+    <div class="flex flex-col">
         <h2 class="text-2xl">OCA Bundle</h2>
         <div class="mb-4">
             <button (click)="addCaptureBase($event)" class="mr-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">Add a Capture Base</button>
@@ -21,7 +21,7 @@
         </div>
         <app-editor class="flex-1" [code]="oca" (codeChanged)="onCodeChanged($event)"></app-editor>
     </div>
-    <div class="flex flex-col flex-1">
+    <div class="flex flex-col">
         <h2 class="text-2xl">Output</h2>
         <div>
             <label class="text-gray-800">Load View: </label>
