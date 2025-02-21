@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { OCAService, Overlays } from '../../services/oca/oca.service';
+import { OCAService } from '../../services/oca/oca.service';
 import JsonPath from '../../utils/JsonPath';
+import { ClusterOrderingOverlay, OverlayType } from '../../model/oca-capture';
 
 @Component({
   selector: 'app-vc-detail',
@@ -20,10 +21,10 @@ export class VcDetailComponent {
   // FIXME: Error handling
   ngOnInit() {
     const captureBase = this.ocaService.getRootCaptureBase(this.oca);
-    const dataSource = this.ocaService.getOverlay(this.oca, Overlays.DATA_SOURCE);
-    const labels = this.ocaService.getOverlay(this.oca, Overlays.LABEL);
-    const clusterOrder = this.ocaService.getOverlay(this.oca, Overlays.CLUSTER_ORDERING);
-    const standard = this.ocaService.getOverlay(this.oca, Overlays.STANDARD);
+    const dataSource = this.ocaService.getOverlay(this.oca, OverlayType.DATA_SOURCE);
+    const labels = this.ocaService.getOverlay(this.oca, OverlayType.LABEL);
+    const clusterOrder = this.ocaService.getOverlay(this.oca, OverlayType.CLUSTER_ORDERING);
+    const standard = this.ocaService.getOverlay(this.oca, OverlayType.STANDARD);
 
     let mappedValues: { [x: string]: any } = {};
     for (const key in captureBase.attributes) {
@@ -47,7 +48,7 @@ export class VcDetailComponent {
     vcDisplay: Array<{ type: string; value: string }>,
     captureBase: { [x: string]: any },
     values: any,
-    clusterOrder: { [x: string]: any },
+    clusterOrder: ClusterOrderingOverlay,
     standard: { [x: string]: any },
     labels: { [x: string]: any }
   ) {
@@ -57,8 +58,8 @@ export class VcDetailComponent {
 
     for (const clusterKey in clusterOrdered) {
       const clusterValue = clusterOrdered[clusterKey];
-      if (clusterOrder['cluster_labels'][clusterValue]) {
-        vcDisplay.push({ type: 'title', value: clusterOrder['cluster_labels'][clusterValue] });
+      if (clusterOrder.cluster_labels?.[clusterValue]) {
+        vcDisplay.push({ type: 'title', value: clusterOrder.cluster_labels[clusterValue] });
       }
       const attributesOrdered = Object.keys(
         clusterOrder['attribute_cluster_order'][clusterValue]
@@ -105,19 +106,19 @@ export class VcDetailComponent {
             const refCaptureBase = this.ocaService.getCaptureBaseByDigest(this.oca, refDigest);
             const refClusterOrder = this.ocaService.getOverlayByDigest(
               this.oca,
-              Overlays.CLUSTER_ORDERING,
+              OverlayType.CLUSTER_ORDERING,
               'en',
               refDigest
             );
             const refStandard = this.ocaService.getOverlayByDigest(
               this.oca,
-              Overlays.STANDARD,
+              OverlayType.STANDARD,
               'en',
               refDigest
             );
             const refLabels = this.ocaService.getOverlayByDigest(
               this.oca,
-              Overlays.LABEL,
+              OverlayType.LABEL,
               'en',
               refDigest
             );

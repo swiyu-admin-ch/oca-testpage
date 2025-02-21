@@ -1,7 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { OCAService, Overlays } from '../../services/oca/oca.service';
+import { OCAService } from '../../services/oca/oca.service';
 import JsonPath from '../../utils/JsonPath';
 import Colors from '../../utils/Colors';
+import { OverlayType } from '../../model/oca-capture';
 
 @Component({
   selector: 'app-vc-list',
@@ -25,9 +26,9 @@ export class VcListComponent {
   // FIXME: Error handling
   ngOnInit() {
     const captureBase = this.ocaService.getRootCaptureBase(this.oca);
-    const meta = this.ocaService.getOverlay(this.oca, Overlays.META, 'en');
-    const branding = this.ocaService.getOverlay(this.oca, Overlays.BRANDING, 'en');
-    const dataSource = this.ocaService.getOverlay(this.oca, Overlays.DATA_SOURCE);
+    const meta = this.ocaService.getOverlay(this.oca, OverlayType.META, 'en');
+    const branding = this.ocaService.getOverlay(this.oca, OverlayType.BRANDING, 'en');
+    const dataSource = this.ocaService.getOverlay(this.oca, OverlayType.DATA_SOURCE);
 
     let mappedValues: Record<string, any> = {};
     for (const key in captureBase.attributes) {
@@ -41,9 +42,10 @@ export class VcListComponent {
       this.vcLogo = branding.logo;
       this.vcPrimaryBackgroundEnd = branding.primary_background_color;
       this.vcPrimaryBackgroundStart = Colors.darken(branding.primary_background_color, 35);
-      this.vcSubtitle = branding.primary_field.replace(/\{\{(.*?)\}\}/g, (_: any, p1: string) =>
-        mappedValues.hasOwnProperty(p1) ? mappedValues[p1] : ''
-      );
+      this.vcSubtitle =
+        branding.primary_field?.replace(/\{\{(.*?)\}\}/g, (_: any, p1: string) =>
+          mappedValues.hasOwnProperty(p1) ? mappedValues[p1] : ''
+        ) ?? '';
     }
   }
 }

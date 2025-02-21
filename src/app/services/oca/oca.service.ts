@@ -1,16 +1,7 @@
 import { Injectable } from '@angular/core';
 import { computeSHA256CESRDigest } from '../../utils/CESR';
-import { CaptureBase } from '../../model/oca-capture';
+import { CaptureBase, CommonOverlay, Overlay, OverlayType } from '../../model/oca-capture';
 import { OCABundle } from '../../model/oca-bundle';
-
-export enum Overlays {
-  LABEL,
-  META,
-  BRANDING,
-  DATA_SOURCE,
-  CLUSTER_ORDERING,
-  STANDARD
-}
 
 @Injectable({
   providedIn: 'root'
@@ -71,37 +62,36 @@ export class OCAService {
     return JSON.stringify(ocaObj, null, '\t');
   }
 
-  getOverlay(oca: string, overlay: Overlays, language: string = 'en') {
+  getOverlay<Type extends OverlayType>(oca: string, overlay: Type, language: string = 'en') {
     const ocaObj = JSON.parse(oca);
 
     const rootCaptureBase = this._getRootCaptureBase(ocaObj);
     const rootDigest = rootCaptureBase.digest;
 
-    return this._getOverlayByDigest(ocaObj, overlay, language, rootDigest);
+    return this._getOverlayByDigest<Type>(ocaObj, overlay, language, rootDigest);
   }
 
-  getOverlayByDigest(oca: string, overlay: Overlays, language: string, digest: string) {
+  getOverlayByDigest<Type extends OverlayType>(
+    oca: string,
+    overlay: Type,
+    language: string,
+    digest: string
+  ) {
     const ocaObj = JSON.parse(oca);
 
-    return this._getOverlayByDigest(ocaObj, overlay, language, digest);
+    return this._getOverlayByDigest<Type>(ocaObj, overlay, language, digest);
   }
 
   getCaptureBaseByDigest(oca: string, digest: string) {
-    const ocaObj = JSON.parse(oca);
+    const ocaObj: OCABundle = JSON.parse(oca);
 
     if (!ocaObj.hasOwnProperty('capture_bases')) {
       throw Error('OCA has no valid Capture Base');
     }
 
-    const captureBases = ocaObj['capture_bases'];
+    const filteredCaptureBase = ocaObj.capture_bases.filter((c) => c.digest === digest);
 
-    const filteredCaptureBase = captureBases.filter((c: any) => {
-      if (!c.hasOwnProperty('digest')) return false;
-
-      return c['digest'] === digest;
-    });
-
-    if (filteredCaptureBase.length < 1) {
+    if (filteredCaptureBase.length > 1) {
       throw Error('OCA has multiple Capture Bases with the same digests');
     } else if (filteredCaptureBase.length == 1) {
       return filteredCaptureBase[0];
@@ -115,61 +105,20 @@ export class OCAService {
     return this._getRootCaptureBase(ocaObj);
   }
 
-  private _getOverlayByDigest(ocaObj: any, overlay: Overlays, language: string, digest: string) {
-    if (!ocaObj.hasOwnProperty('overlays')) {
-      throw Error('OCA has no overlays!');
-    }
+  private _getOverlayByDigest<Type extends OverlayType>(
+    ocaObj: OCABundle,
+    overlay: Type,
+    language: string,
+    digest: string
+  ): Overlay<Type> {
+    const result = ocaObj.overlays.find(
+      (o) =>
+        o.type === overlay &&
+        o.capture_base === digest &&
+        ('language' in o ? o.language === language : true)
+    );
 
-    const overlays = ocaObj.overlays;
-
-    switch (overlay) {
-      case Overlays.META:
-        return overlays.find(
-          (o: { [x: string]: string }) =>
-            o['type'] === 'spec/overlays/meta/1.0' &&
-            o['capture_base'] === digest &&
-            o['language'] === language
-        );
-        break;
-      case Overlays.LABEL:
-        return overlays.find(
-          (o: { [x: string]: string }) =>
-            o['type'] === 'spec/overlays/label/1.0' &&
-            o['capture_base'] === digest &&
-            o['language'] === language
-        );
-        break;
-      case Overlays.STANDARD:
-        return overlays.find(
-          (o: { [x: string]: string }) =>
-            o['type'] === 'spec/overlays/standard/1.0' && o['capture_base'] === digest
-        );
-        break;
-      case Overlays.DATA_SOURCE:
-        return overlays.find(
-          (o: { [x: string]: string }) =>
-            o['type'] === 'extend/overlays/data_source/1.0' &&
-            o['capture_base'] === digest &&
-            o['format'] === 'json'
-        );
-        break;
-      case Overlays.CLUSTER_ORDERING:
-        return overlays.find(
-          (o: { [x: string]: string }) =>
-            o['type'] === 'extend/overlays/cluster_ordering/1.0' &&
-            o['capture_base'] === digest &&
-            o['language'] === language
-        );
-        break;
-      case Overlays.BRANDING:
-        return overlays.find(
-          (o: { [x: string]: string }) =>
-            o['type'] === 'aries/overlays/branding/1.1' &&
-            o['capture_base'] === digest &&
-            o['language'] === language
-        );
-        break;
-    }
+    return result as Overlay<Type>;
   }
 
   private _getRootCaptureBase(ocaObj: OCABundle): CaptureBase {
