@@ -31,9 +31,11 @@ export class VcPreviewComponent implements OnInit {
     const branding = this.ocaService.getOverlay(this.oca, OverlayType.BRANDING, 'en');
     const dataSource = this.ocaService.getOverlay(this.oca, OverlayType.DATA_SOURCE);
 
-    let mappedValues: { [x: string]: any } = {};
-    for (const key in captureBase.attributes) {
-      mappedValues[key] = JsonPath.query(this.input, dataSource.attribute_sources[key]);
+    const mappedValues: Record<string, any> = {};
+    if (dataSource) {
+      for (const key in captureBase.attributes) {
+        mappedValues[key] = JsonPath.query(this.input, dataSource.attribute_sources[key]);
+      }
     }
 
     if (meta) {

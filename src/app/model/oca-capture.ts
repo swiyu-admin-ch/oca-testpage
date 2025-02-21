@@ -85,18 +85,13 @@ export interface ClusterOrderingOverlay
   cluster_labels?: Record<string, string>;
 }
 
-export type Overlay<Type extends OverlayType> = Type extends OverlayType.META
-  ? MetaOverlay
-  : Type extends OverlayType.FORMAT
-    ? FormatOverlay
-    : Type extends OverlayType.STANDARD
-      ? StandardOverlay
-      : Type extends OverlayType.LABEL
-        ? LabelOverlay
-        : Type extends OverlayType.BRANDING
-          ? BrandingOverlay
-          : Type extends OverlayType.DATA_SOURCE
-            ? DataSourceOverlay
-            : Type extends OverlayType.CLUSTER_ORDERING
-              ? ClusterOrderingOverlay
-              : never;
+export type AnyOverlay =
+  | MetaOverlay
+  | FormatOverlay
+  | StandardOverlay
+  | LabelOverlay
+  | BrandingOverlay
+  | DataSourceOverlay
+  | ClusterOrderingOverlay;
+
+export type Overlay<Type extends OverlayType> = Extract<AnyOverlay, { type: Type }>;

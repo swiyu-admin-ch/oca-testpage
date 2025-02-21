@@ -110,7 +110,7 @@ export class OCAService {
     overlay: Type,
     language: string,
     digest: string
-  ): Overlay<Type> {
+  ): Overlay<Type> | undefined {
     const result = ocaObj.overlays.find(
       (o) =>
         o.type === overlay &&

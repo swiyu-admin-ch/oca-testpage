@@ -1,7 +1,13 @@
 import { Component, Input } from '@angular/core';
 import { OCAService } from '../../services/oca/oca.service';
 import JsonPath from '../../utils/JsonPath';
-import { ClusterOrderingOverlay, OverlayType } from '../../model/oca-capture';
+import {
+  CaptureBase,
+  ClusterOrderingOverlay,
+  LabelOverlay,
+  OverlayType,
+  StandardOverlay
+} from '../../model/oca-capture';
 
 @Component({
   selector: 'app-vc-detail',
@@ -26,10 +32,12 @@ export class VcDetailComponent {
     const clusterOrder = this.ocaService.getOverlay(this.oca, OverlayType.CLUSTER_ORDERING);
     const standard = this.ocaService.getOverlay(this.oca, OverlayType.STANDARD);
 
-    let mappedValues: { [x: string]: any } = {};
-    for (const key in captureBase.attributes) {
-      const queryResult = JsonPath.query(this.input, dataSource.attribute_sources[key]);
-      mappedValues[key] = queryResult.length > 0 ? queryResult[0] : '';
+    const mappedValues: Record<string, any> = {};
+    if (dataSource) {
+      for (const key in captureBase.attributes) {
+        const queryResult = JsonPath.query(this.input, dataSource.attribute_sources[key]);
+        mappedValues[key] = queryResult.length > 0 ? queryResult[0] : '';
+      }
     }
 
     if (clusterOrder) {
@@ -46,11 +54,11 @@ export class VcDetailComponent {
 
   parseClusterOrder(
     vcDisplay: Array<{ type: string; value: string }>,
-    captureBase: { [x: string]: any },
+    captureBase: CaptureBase,
     values: any,
     clusterOrder: ClusterOrderingOverlay,
-    standard: { [x: string]: any },
-    labels: { [x: string]: any }
+    standard: StandardOverlay | undefined,
+    labels: LabelOverlay | undefined
   ) {
     const clusterOrdered = Object.keys(clusterOrder['cluster_order']).sort(
       (a, b) => clusterOrder['cluster_order'][a] - clusterOrder['cluster_order'][b]
@@ -76,7 +84,7 @@ export class VcDetailComponent {
       for (let i = 0; i < values.length; i++) {
         for (const attributeKey in attributesOrdered) {
           const attributeValue = attributesOrdered[attributeKey];
-          if (labels['attribute_labels'][attributeValue]) {
+          if (labels?.['attribute_labels'][attributeValue]) {
             vcDisplay.push({ type: 'label', value: labels['attribute_labels'][attributeValue] });
           }
 
@@ -124,14 +132,16 @@ export class VcDetailComponent {
             );
             const refMappedValue = values[i][attributeValue];
 
-            this.parseClusterOrder(
-              vcDisplay,
-              refCaptureBase,
-              refMappedValue,
-              refClusterOrder,
-              refStandard,
-              refLabels
-            );
+            if (refClusterOrder) {
+              this.parseClusterOrder(
+                vcDisplay,
+                refCaptureBase,
+                refMappedValue,
+                refClusterOrder,
+                refStandard,
+                refLabels
+              );
+            }
           }
         }
 
