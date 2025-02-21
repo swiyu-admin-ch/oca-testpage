@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { computeSHA256CESRDigest } from '../../utils/CESR';
+import { CaptureBase } from '../../model/oca-capture';
+import { OCABundle } from '../../model/oca-bundle';
 
 export enum Overlays {
   LABEL,
@@ -170,71 +172,39 @@ export class OCAService {
     }
   }
 
-  private _getRootCaptureBase(ocaObj: any): any {
-    if (ocaObj.hasOwnProperty('capture_bases')) {
-      const captureBases = ocaObj['capture_bases'];
+  private _getRootCaptureBase(ocaObj: OCABundle): CaptureBase {
+    const captureBases = ocaObj.capture_bases;
 
-      if (captureBases.length < 1) {
-        throw Error('OCA has no valid Capture Base');
-      } else if (captureBases.length == 1) {
-        return captureBases[0];
-      } else {
-        for (let i = 0; i < captureBases.length; i++) {
-          // TODO too much loops can surely be simplified
-          const captureBaseWithReferences = captureBases.filter(
-            (c: { hasOwnProperty: (arg0: string) => any; attributes: { [x: string]: string } }) => {
-              if (!c.hasOwnProperty('attributes')) return false;
-
-              for (const key in c.attributes) {
-                const value = c.attributes[key];
-
-                if (value.startsWith('refs:') || value.startsWith('Array[refs:')) {
-                  return true;
-                }
-              }
-              return false;
-            }
-          );
-
-          let rootCaptureBases = [];
-          // check for root capture bases.
-          // TODO could be optimized with internal storage
-          for (let i = 0; i < captureBaseWithReferences.length; i++) {
-            const currentDigest = captureBaseWithReferences[i];
-
-            const referringCaptureBases = captureBaseWithReferences.filter(
-              (c: { attributes: { [x: string]: string } }) => {
-                for (const key in c.attributes) {
-                  const value = c.attributes[key];
-
-                  if (value.startsWith('refs:') || value.startsWith('Array[refs:')) {
-                    if (value.includes(currentDigest)) {
-                      return true;
-                    }
-                  }
-                }
-                return false;
-              }
-            );
-
-            if (referringCaptureBases.length == 0) {
-              rootCaptureBases.push(captureBaseWithReferences[i]);
-            }
-          }
-
-          if (rootCaptureBases.length == 0) {
-            throw Error('OCA has no valid Capture Base');
-          }
-
-          if (rootCaptureBases.length > 1) {
-            throw Error('OCA can only have one root Capture Base');
-          }
-
-          return rootCaptureBases[0];
-        }
-      }
-    } else {
+    if (captureBases.length < 1) {
       throw Error('OCA has no valid Capture Base');
     }
+
+    if (captureBases.length == 1) {
+      return captureBases[0];
+    }
+
+    const captureBaseReferences = captureBases.reduce<string[]>(
+      (aggr, base) => [
+        ...aggr,
+        ...Object.values(base.attributes).filter(
+          (value) => value.startsWith('refs:') || value.startsWith('Array[refs:')
+        )
+      ],
+      []
+    );
+
+    const rootCaptureBases = captureBases.filter(
+      (base) => !captureBaseReferences.some((ref) => ref.includes(base.digest))
+    );
+
+    if (rootCaptureBases.length == 0) {
+      throw Error('OCA has no valid Capture Base');
+    }
+
+    if (rootCaptureBases.length > 1) {
+      throw Error('OCA can only have one root Capture Base');
+    }
+
+    return rootCaptureBases[0];
   }
 }
