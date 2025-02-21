@@ -1,0 +1,19 @@
+{
+	"firstname": "John",
+	"lastname": "Smith",
+	"address": {
+		"street": "Main Street 1",
+		"city": "1000 Utopia",
+		"country": "Utopia"
+	},
+	"pets": [
+		{
+			"race": "Dog",
+			"name": "Rex"
+		},
+		{
+			"race": "Cat",
+			"name": "Mr. Pineapple"
+		}
+	]
+}
