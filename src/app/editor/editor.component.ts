@@ -10,19 +10,18 @@ import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
   styleUrl: './editor.component.css'
 })
 export class EditorComponent {
-  @Input() 
+  @Input()
   set code(newCode: string) {
-    
     this._code = newCode;
   }
 
   editorOptions = {
     theme: 'vs-light',
     language: 'json',
-    minimap: {enabled: false},
+    minimap: { enabled: false },
     scrollBeyondLastLine: false
   };
-  _code: string = "";
+  _code: string = '';
 
   @Output() codeChanged = new EventEmitter<string>();
 

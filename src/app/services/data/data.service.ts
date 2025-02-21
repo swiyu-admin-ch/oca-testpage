@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class DataService {
   constructor() {}
@@ -17,8 +17,8 @@ export class DataService {
         address: {
           street: 'Main Street 1',
           city: '1000 Utopia',
-          country: 'Utopia',
-        },
+          country: 'Utopia'
+        }
       },
       oca: {
         capture_bases: [
@@ -32,31 +32,31 @@ export class DataService {
               birthdate: 'DateTime',
               address_street: 'Text',
               address_city: 'Text',
-              address_country: 'Text',
-            },
-          },
+              address_country: 'Text'
+            }
+          }
         ],
         overlays: [
           {
             type: 'spec/overlays/meta/1.0',
             capture_base: 'IMbXA_RsMhYKpcq9qqKhJCSljyIdwc-T96GuhavMKved',
             language: 'en',
-            name: 'Person ID',
+            name: 'Person ID'
           },
           {
             type: 'spec/overlays/format/1.0',
             capture_base: 'IMbXA_RsMhYKpcq9qqKhJCSljyIdwc-T96GuhavMKved',
             attribute_formats: {
-              birthdate: 'DD.MM.YYYY',
-            },
+              birthdate: 'DD.MM.YYYY'
+            }
           },
           {
             type: 'spec/overlays/standard/1.0',
             capture_base: 'IMbXA_RsMhYKpcq9qqKhJCSljyIdwc-T96GuhavMKved',
             attr_standards: {
               portrait: 'urn:ietf:rfc:2397',
-              birthdate: 'urn:iso:std:iso:8601',
-            },
+              birthdate: 'urn:iso:std:iso:8601'
+            }
           },
           {
             type: 'spec/overlays/label/1.0',
@@ -69,8 +69,8 @@ export class DataService {
               birthdate: 'Birthdate',
               address_street: 'Street',
               address_city: 'City',
-              address_country: 'Country',
-            },
+              address_country: 'Country'
+            }
           },
           {
             type: 'extend/overlays/data_source/1.0',
@@ -83,8 +83,8 @@ export class DataService {
               birthdate: '$.birthdate',
               address_street: '$.address.street',
               address_city: '$.address.city',
-              address_country: '$.address.country',
-            },
+              address_country: '$.address.country'
+            }
           },
           {
             type: 'aries/overlays/branding/1.1',
@@ -93,7 +93,7 @@ export class DataService {
             theme: 'light',
             logo: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMQAAACQCAMAAABgZzS4AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAJcEhZcwAAHsIAAB7CAW7QdT4AAAHRUExURUdwTP///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////3MG3McAAACadFJOUwAwsJCAD7Po0AH7PPjwTMoVzti5uMJLUNZoLVsdX+oHoZYFihhag27AYveVHqRCyI/SUWBlRtGT+uDBJmnvT3gbIOmML94+48TtzWuUjp1K9HM/BtQ5JE1c5wn2AwiyVZg22xc7fqJAZALLjZLVEbb52lltcjT9fF0fr1L8PSMEKPFwN4Qnam8N9XS8iCsMsUnukdnJSHGaOGEBzcSNAAAEGUlEQVR42u2c51YTQRSAJ33TCQmh19BiEJBAEEV6710EKYpg74AC9t57vU/r4ah/JAlbBubOOt8T7HdmZ+e2WUIEAoFAIGBBiqes2liVagOwpVYZq8s8KbwZ1LXHYAdSex03Ava7hXmQgLyI086DwsJlSMrEFnYN+3Ef7ErfMGqHHCvIYnMDrcL9VyMgk5HR8zgdlvyggKvFGB2cNlDEiTF8DuE7oBBHLTYHM6jgFiqFk0Ogiu923tdhGzMeh0xQTT8Whxvr6iXWp3E4tB4DDRxDcV4UeUETrzGc3SbQCILNnePSKuHKYS5hBM0YWTukAwW+MpaQaEj47PwvBEA6/wvBeCkMQAkDz2fEX94wrG200ZI4ze59OgvUOMtfGoEp9iinJ1HOyiHfRU/iwBwjiUmgyCR/WelOMnk/JbYxMZII0JQIMJJIpSmRykiigaZEAyMJG00JGyMJF00Jl5D4z18nXWxsXXxidXHY6SLs0EUAOKaHUHzuAMVjIl+kp/97ocBJT8LJrnhGLfBoY1iMNfF+SmzzQw8FZeKj49AnmiyatzaVpZAIWzw0JDyMJXTRAtZHM56UapUoZe9Axr9oc/AWIZDQOirUSlDQpEWiiSChn7+slGZigWiQkZCIOocQQcUtNQ6PCDJqHUoV7oQJOsZOKKwgOwlCiq8qcfAvEZx8k30J5OVzgpaNTXkO1hyCGTkXo3zHCXLsWxPJFS4vcHHTzhlJfFmw8C4PCr+pa48z4hjj6NrmH/i/QCsQCAQCgQ6xVGQ5gyWNzU8KD1qPSJ298SKn3k7piPVgYWlzY0nQmVVhQfLoRyuzR0Mr/pjKDqRN8heEVrMrjzJ5+JauXHNBWje9FnB3WoE5t6tlXx5+/EGwzGTNoDgP8c/IeIbVdHP46fhePX/+49qBNDfsC+60+nOnaE97pNQMeh2wzzi8F9Nphe9T0aHrwIzPQ9F7Wr+bNfUZwJyMS02qv8aWsN8BSHAEoleUG7ybtl4DVFybL3mhSMEQcQNC3AOyZ0Asz3yAlr5MWdvDcwhQcyi4q8KZHkBPz5mkCkXmw8ABh5eT9L47JOAEqSORw1oecENbVoJ1mAWOcMf92p68AFzhjSdRC5yRG0fCyJtEvFkvG28SNr1KBPTwOv3Uw8YmXr4cLsRPItw8OTxMEHhktfHjkPc2YWGDnwBwKkkovsxHKG5OPoZq4CEp2j3TDmJPT+WNx99GvDWk2/JLNgM4SzYRZdd2ZqbnsSlYb8woLwJeiQbwlDH9YfXl2KZLGArK9TVa23vF2YsMS/unF7Np/QE0Jf0iiybLYA3tGan8U+fq96vd9bH8U3ht7y43tw7f3MvG4+zE+8H+DxWiBaymGb8aKvBLapvxMf9KaJRVMz7xWEQpf2MRAoEAI78AbqJTMu509qcAAAAASUVORK5CYII=',
             primary_background_color: '#FE3434',
-            primary_field: '{{firstname}} {{lastname}}',
+            primary_field: '{{firstname}} {{lastname}}'
           },
           {
             type: 'extend/overlays/cluster_ordering/1.0',
@@ -101,28 +101,28 @@ export class DataService {
             language: 'en',
             cluster_order: {
               main: 1,
-              address: 2,
+              address: 2
             },
             cluster_labels: {
               main: 'Content',
-              address: 'Address',
+              address: 'Address'
             },
             attribute_cluster_order: {
               main: {
                 portrait: 1,
                 firstname: 2,
                 lastname: 3,
-                birthdate: 4,
+                birthdate: 4
               },
               address: {
                 address_street: 1,
                 address_city: 2,
-                address_country: 3,
-              },
-            },
-          },
-        ],
-      },
+                address_country: 3
+              }
+            }
+          }
+        ]
+      }
     };
   }
   getPetsExample() {
@@ -133,18 +133,18 @@ export class DataService {
         address: {
           street: 'Main Street 1',
           city: '1000 Utopia',
-          country: 'Utopia',
+          country: 'Utopia'
         },
         pets: [
           {
             race: 'Dog',
-            name: 'Rex',
+            name: 'Rex'
           },
           {
             race: 'Cat',
-            name: 'Mr. Pineapple',
-          },
-        ],
+            name: 'Mr. Pineapple'
+          }
+        ]
       },
       oca: {
         capture_bases: [
@@ -157,17 +157,17 @@ export class DataService {
               address_street: 'Text',
               address_city: 'Text',
               address_country: 'Text',
-              pets: 'Array[refs:IKLvtGx1NU0007DUTTmI_6Zw-hnGRFicZ5R4vAxg4j2j]',
-            },
+              pets: 'Array[refs:IKLvtGx1NU0007DUTTmI_6Zw-hnGRFicZ5R4vAxg4j2j]'
+            }
           },
           {
             type: 'spec/capture_base/1.0',
             digest: 'IKLvtGx1NU0007DUTTmI_6Zw-hnGRFicZ5R4vAxg4j2j',
             attributes: {
               name: 'Text',
-              race: 'Text',
-            },
-          },
+              race: 'Text'
+            }
+          }
         ],
         overlays: [
           {
@@ -180,8 +180,8 @@ export class DataService {
               address_street: '$.address.street',
               address_city: '$.address.city',
               address_country: '$.address.country',
-              pets: '$.pets',
-            },
+              pets: '$.pets'
+            }
           },
           {
             type: 'extend/overlays/data_source/1.0',
@@ -189,8 +189,8 @@ export class DataService {
             format: 'json',
             attribute_sources: {
               name: '$.pets[*].name',
-              race: '$.pets[*].race',
-            },
+              race: '$.pets[*].race'
+            }
           },
           {
             type: 'aries/overlays/branding/1.1',
@@ -199,13 +199,13 @@ export class DataService {
             theme: 'light',
             logo: 'data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAGbSURBVHgBvVaBUcMwDFQ4BjAbmA06QjYgGzQbkA1aJmg3yHWCwgSGCVImcJkg3UDYjVMUI6VxW/g7X+701kuWZTsAI0DEwo0GO9RuKMKpYGvdsH4uXALnqPE3DOFrhs8hFc5pizxyN2YCZyS9+5FYuWCfgYzZJYFUon2UuwMZ+xG7xO3gXKBQ95xwGyHIuxuvbhwY/oPo+WbSQAyKtDCGVtWM3aMifmXENcGnb3uqp6Q2NZHgEpnWDQl5rsJwxgS9NTBZ98ghEdgdcA6t3yOpJQtGSIUVekHN+DwJWsfSWSGLmsm2xWHti2iOEbQav6I3IYtPIqDdZwvDc3K0OY5W5EvQ2vUb2jJZaBLIogxL5pUcf9LC7gzZQPigJXFe4HmsyPw1sRvk9jKsjj4Fc5yOOfFTyDcLcEGfMR0VpACnlUvC4j+C9FjFulkURLuPhdvgIcuy08UbPxMabofBjRMHOsAfIS6db21fOgXXYe/K9kgNgxWFmr7A9dhMmoXD001h8OcvSPpLWkIKsLu3THC2yBxG7B48S5IoJb1vHubbPPxs2qsAAAAASUVORK5CYII=',
             primary_background_color: '#2C75E3',
-            primary_field: '{{firstname}} {{lastname}} from {{address_country}}',
+            primary_field: '{{firstname}} {{lastname}} from {{address_country}}'
           },
           {
             type: 'spec/overlays/meta/1.0',
             capture_base: 'IDif6Jd863C_YYjp1cHFCTAUr1_TzZSS1l-pv21Q56qs',
             language: 'en',
-            name: 'Pet Permit',
+            name: 'Pet Permit'
           },
           {
             capture_base: 'IDif6Jd863C_YYjp1cHFCTAUr1_TzZSS1l-pv21Q56qs',
@@ -213,24 +213,24 @@ export class DataService {
             language: 'en',
             cluster_order: {
               pets: 1,
-              owner: 2,
+              owner: 2
             },
             cluster_labels: {
               pets: 'Pets',
-              owner: 'Owner information',
+              owner: 'Owner information'
             },
             attribute_cluster_order: {
               pets: {
-                pets: 1,
+                pets: 1
               },
               owner: {
                 firstname: 1,
                 lastname: 2,
                 address_street: 3,
                 address_city: 4,
-                address_country: 5,
-              },
-            },
+                address_country: 5
+              }
+            }
           },
           {
             capture_base: 'IKLvtGx1NU0007DUTTmI_6Zw-hnGRFicZ5R4vAxg4j2j',
@@ -238,8 +238,8 @@ export class DataService {
             language: 'en',
             attribute_labels: {
               race: 'Race',
-              name: 'Name',
-            },
+              name: 'Name'
+            }
           },
           {
             capture_base: 'IDif6Jd863C_YYjp1cHFCTAUr1_TzZSS1l-pv21Q56qs',
@@ -250,26 +250,26 @@ export class DataService {
               lastname: 'Lastname',
               address_street: 'Street',
               address_city: 'City',
-              address_country: 'Country',
-            },
+              address_country: 'Country'
+            }
           },
           {
             capture_base: 'IKLvtGx1NU0007DUTTmI_6Zw-hnGRFicZ5R4vAxg4j2j',
             type: 'extend/overlays/cluster_ordering/1.0',
             language: 'en',
             cluster_order: {
-              default: 1,
+              default: 1
             },
             cluster_labels: {},
             attribute_cluster_order: {
               default: {
                 race: 1,
-                name: 2,
-              },
-            },
-          },
-        ],
-      },
+                name: 2
+              }
+            }
+          }
+        ]
+      }
     };
   }
 }

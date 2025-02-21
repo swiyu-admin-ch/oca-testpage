@@ -10,10 +10,10 @@ import { VcDetailComponent } from '../renderer/vc-detail/vc-detail.component';
 @Component({
   selector: 'app-playground',
   host: {
-    class: "h-full"
+    class: 'h-full'
   },
   standalone: true,
-  imports: [FormsModule ,EditorComponent],
+  imports: [FormsModule, EditorComponent],
   templateUrl: './playground.component.html',
   styleUrl: './playground.component.css'
 })
@@ -28,11 +28,16 @@ export class PlaygroundComponent {
 
   // Fields
 
-  loadExampleState = "";
-  viewRenderState = "";
-  @ViewChild('viewRenderComponent', {read: ViewContainerRef}) viewRenderComponent: ViewContainerRef | undefined;
+  loadExampleState = '';
+  viewRenderState = '';
+  @ViewChild('viewRenderComponent', { read: ViewContainerRef }) viewRenderComponent:
+    | ViewContainerRef
+    | undefined;
 
-  constructor(private ocaService: OCAService, private dataService: DataService) {
+  constructor(
+    private ocaService: OCAService,
+    private dataService: DataService
+  ) {
     this.reset(null);
   }
 
@@ -48,40 +53,40 @@ export class PlaygroundComponent {
 
   loadExample(event: Event) {
     let example = null;
-    switch(this.loadExampleState) {
-      case "person-id":
+    switch (this.loadExampleState) {
+      case 'person-id':
         example = this.dataService.getPersonExample();
         break;
-      case "pets":
+      case 'pets':
         example = this.dataService.getPetsExample();
         break;
     }
 
-    if(example != null) {
+    if (example != null) {
       this.input = JSON.stringify(example.input, null, '\t');
       this.oca = JSON.stringify(example.oca, null, '\t');
       this.updatedInput = this.input;
       this.updatedOCA = this.oca;
-      this.viewRenderState = "vc-preview";
+      this.viewRenderState = 'vc-preview';
     }
   }
 
   loadViewRenderer(event: Event | null) {
-    this.viewRenderComponent?.clear()
+    this.viewRenderComponent?.clear();
     let viewComponent = null;
-    switch(this.viewRenderState) {
-      case "vc-preview":
+    switch (this.viewRenderState) {
+      case 'vc-preview':
         viewComponent = this.viewRenderComponent?.createComponent(VcPreviewComponent);
         break;
-      case "vc-list":
+      case 'vc-list':
         viewComponent = this.viewRenderComponent?.createComponent(VcListComponent);
         break;
-      case "vc-detail":
+      case 'vc-detail':
         viewComponent = this.viewRenderComponent?.createComponent(VcDetailComponent);
         break;
     }
 
-    if(viewComponent != null) {
+    if (viewComponent != null) {
       viewComponent.setInput('input', this.updatedInput);
       viewComponent.setInput('oca', this.updatedOCA);
     }
@@ -90,10 +95,10 @@ export class PlaygroundComponent {
   reset(event: Event | null) {
     this.oca = this.ocaService.initOCA();
     this.input = '{}';
-    this.updatedInput = this.input
+    this.updatedInput = this.input;
     this.updatedOCA = this.oca;
-    this.loadExampleState = "";
-    this.viewRenderState = "";
+    this.loadExampleState = '';
+    this.viewRenderState = '';
     this.viewRenderComponent?.clear();
   }
 

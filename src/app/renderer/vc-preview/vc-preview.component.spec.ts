@@ -9,8 +9,7 @@ describe('VcPreviewComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [VcPreviewComponent]
-    })
-    .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(VcPreviewComponent);
     component = fixture.componentInstance;

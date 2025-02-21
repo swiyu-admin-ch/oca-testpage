@@ -8,11 +8,11 @@ export enum Overlays {
   BRANDING,
   DATA_SOURCE,
   CLUSTER_ORDERING,
-  STANDARD,
+  STANDARD
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class OCAService {
   private cesrDummy: string = '############################################';
@@ -21,16 +21,16 @@ export class OCAService {
     digest: '############################################',
     attributes: {
       firstname: 'Text',
-      lastname: 'Text',
-    },
+      lastname: 'Text'
+    }
   };
   private nestedCaptureBaseDummy = {
     type: 'spec/capture_base/1.0',
     digest: '############################################',
     attributes: {
       title: 'Test',
-      items: 'Array[refs:############################################]',
-    },
+      items: 'Array[refs:############################################]'
+    }
   };
   constructor() {}
 
@@ -38,7 +38,7 @@ export class OCAService {
     return JSON.stringify(
       {
         capture_bases: [this.captureBaseDummy],
-        overlays: [],
+        overlays: []
       },
       null,
       '\t'
@@ -125,24 +125,31 @@ export class OCAService {
       case Overlays.META:
         return overlays.find(
           (o: { [x: string]: string }) =>
-            o['type'] === 'spec/overlays/meta/1.0' && o['capture_base'] === digest && o['language'] === language
+            o['type'] === 'spec/overlays/meta/1.0' &&
+            o['capture_base'] === digest &&
+            o['language'] === language
         );
         break;
       case Overlays.LABEL:
         return overlays.find(
           (o: { [x: string]: string }) =>
-            o['type'] === 'spec/overlays/label/1.0' && o['capture_base'] === digest && o['language'] === language
+            o['type'] === 'spec/overlays/label/1.0' &&
+            o['capture_base'] === digest &&
+            o['language'] === language
         );
         break;
       case Overlays.STANDARD:
         return overlays.find(
-          (o: { [x: string]: string }) => o['type'] === 'spec/overlays/standard/1.0' && o['capture_base'] === digest
+          (o: { [x: string]: string }) =>
+            o['type'] === 'spec/overlays/standard/1.0' && o['capture_base'] === digest
         );
         break;
       case Overlays.DATA_SOURCE:
         return overlays.find(
           (o: { [x: string]: string }) =>
-            o['type'] === 'extend/overlays/data_source/1.0' && o['capture_base'] === digest && o['format'] === 'json'
+            o['type'] === 'extend/overlays/data_source/1.0' &&
+            o['capture_base'] === digest &&
+            o['format'] === 'json'
         );
         break;
       case Overlays.CLUSTER_ORDERING:
@@ -156,7 +163,9 @@ export class OCAService {
       case Overlays.BRANDING:
         return overlays.find(
           (o: { [x: string]: string }) =>
-            o['type'] === 'aries/overlays/branding/1.1' && o['capture_base'] === digest && o['language'] === language
+            o['type'] === 'aries/overlays/branding/1.1' &&
+            o['capture_base'] === digest &&
+            o['language'] === language
         );
         break;
     }

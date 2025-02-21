@@ -9,8 +9,7 @@ describe('VcListComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [VcListComponent]
-    })
-    .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(VcListComponent);
     component = fixture.componentInstance;
