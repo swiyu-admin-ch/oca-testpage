@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import canonicalize from 'canonicalize';
-import { encodeBase64url } from '../../utils/Base64';
+import { computeSHA256CESRDigest } from '../../utils/CESR';
 
 export enum Overlays {
   LABEL,
@@ -61,7 +60,7 @@ export class OCAService {
 
       for (let i = 0; i < captureBases.length; i++) {
         captureBases[i].digest = this.cesrDummy;
-        captureBases[i].digest = await this.computeSHA256CESRDigest(captureBases[i]);
+        captureBases[i].digest = await computeSHA256CESRDigest(captureBases[i]);
       }
     } else {
       throw Error('OCA has no valid Capture Base');
@@ -237,27 +236,5 @@ export class OCAService {
     } else {
       throw Error('OCA has no valid Capture Base');
     }
-  }
-
-  // see https://github.com/e-id-admin/open-source-community/blob/main/tech-roadmap/rfcs/oca/appendixes/cesr-sha256-encoder.md
-  // for a longer explanation
-  private async computeSHA256CESRDigest(captureBaseObj: any): Promise<string> {
-    const canonicalizedObj = canonicalize(captureBaseObj);
-
-    if (canonicalizedObj === undefined) {
-      throw Error('Could not canonicalize the Capture Base.');
-    }
-
-    const encoder = new TextEncoder();
-    const rawDigestBuffer = await crypto.subtle.digest('SHA-256', encoder.encode(canonicalizedObj));
-    const rawDigest = new Uint8Array(rawDigestBuffer);
-    const bytes = new Uint8Array(rawDigest.length + 1);
-    bytes[0] = 0;
-    for (let i = 0; i < rawDigest.length; i++) {
-      bytes[i + 1] = rawDigest[i];
-    }
-
-    const base64Digest = encodeBase64url(bytes);
-    return 'I' + base64Digest.substring(1);
   }
 }
