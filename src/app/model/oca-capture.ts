@@ -1,21 +1,6 @@
-enum SpecType {
-  Base1_0 = 'spec/capture_base/1.0',
-
-  Meta1_0 = 'spec/overlays/meta/1.0',
-  Format1_0 = 'spec/overlays/format/1.0',
-  Standard1_0 = 'spec/overlays/standard/1.0',
-  Label1_0 = 'spec/overlays/label/1.0',
-
-  Branding1_0 = 'aries/overlays/branding/1.0',
-  Branding1_1 = 'aries/overlays/branding/1.1',
-
-  DataSource1_0 = 'extend/overlays/data_source/1.0',
-  ClusterOrdering1_0 = 'extend/overlays/cluster_ordering/1.0'
-}
-
 /** https://oca.colossi.network/specification/#capture-base */
 export interface CaptureBase {
-  type: SpecType.Base1_0;
+  type: 'spec/capture_base/1.0';
   digest: string;
   attributes: Record<string, string>;
   classification?: string;
@@ -23,14 +8,14 @@ export interface CaptureBase {
 }
 
 export const enum OverlaySpecType {
-  META_1_0 = SpecType.Meta1_0,
-  FORMAT_1_0 = SpecType.Format1_0,
-  STANDARD_1_0 = SpecType.Standard1_0,
-  LABEL_1_0 = SpecType.Label1_0,
-  BRANDING_1_0 = SpecType.Branding1_0,
-  BRANDING_1_1 = SpecType.Branding1_1,
-  DATA_SOURCE_1_0 = SpecType.DataSource1_0,
-  CLUSTER_ORDERING_1_0 = SpecType.ClusterOrdering1_0
+  META_1_0 = 'spec/overlays/meta/1.0',
+  FORMAT_1_0 = 'spec/overlays/format/1.0',
+  STANDARD_1_0 = 'spec/overlays/standard/1.0',
+  LABEL_1_0 = 'spec/overlays/label/1.0',
+  BRANDING_1_0 = 'aries/overlays/branding/1.0',
+  BRANDING_1_1 = 'aries/overlays/branding/1.1',
+  DATA_SOURCE_1_0 = 'extend/overlays/data_source/1.0',
+  CLUSTER_ORDERING_1_0 = 'extend/overlays/cluster_ordering/1.0'
 }
 
 export const OverlayTypes = {

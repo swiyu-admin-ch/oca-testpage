@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { computeSHA256CESRDigest } from '../../utils/CESR';
 import { CaptureBase, Overlay, OverlaySpecType } from '../../model/oca-capture';
-import { OCABundle } from '../../model/oca-bundle';
+import { OCABundle } from '../../model/top-level';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OCAService {
   private cesrDummy: string = '############################################';
-  private captureBaseDummy = {
+  private captureBaseDummy: CaptureBase = {
     type: 'spec/capture_base/1.0',
     digest: '############################################',
     attributes: {
@@ -16,7 +16,7 @@ export class OCAService {
       lastname: 'Text'
     }
   };
-  private nestedCaptureBaseDummy = {
+  private nestedCaptureBaseDummy: CaptureBase = {
     type: 'spec/capture_base/1.0',
     digest: '############################################',
     attributes: {
@@ -26,74 +26,53 @@ export class OCAService {
   };
   constructor() {}
 
-  initOCA(): string {
-    return JSON.stringify(
-      {
-        capture_bases: [this.captureBaseDummy],
-        overlays: []
-      },
-      null,
-      '\t'
-    );
+  initOCA(): OCABundle {
+    return {
+      capture_bases: [this.captureBaseDummy],
+      overlays: []
+    };
   }
 
-  addCaptureBase(oca: string): string {
-    const ocaObj = JSON.parse(oca);
-
-    ocaObj['capture_bases'].push(this.nestedCaptureBaseDummy);
-
-    return JSON.stringify(ocaObj, null, '\t');
+  addCaptureBase(oca: OCABundle): OCABundle {
+    return {
+      capture_bases: [...oca.capture_bases, this.nestedCaptureBaseDummy],
+      overlays: oca.overlays
+    };
   }
 
-  async computeDigests(oca: string): Promise<string> {
-    const ocaObj = JSON.parse(oca);
-
-    if (ocaObj.hasOwnProperty('capture_bases')) {
-      const captureBases = ocaObj['capture_bases'];
-
-      for (let i = 0; i < captureBases.length; i++) {
-        captureBases[i].digest = this.cesrDummy;
-        captureBases[i].digest = await computeSHA256CESRDigest(captureBases[i]);
-      }
-    } else {
-      throw Error('OCA has no valid Capture Base');
+  async computeDigests(oca: OCABundle): Promise<OCABundle> {
+    const capture_bases = [];
+    for (const base of oca.capture_bases) {
+      const dummy = { ...base, digest: this.cesrDummy };
+      const digest = await computeSHA256CESRDigest(dummy);
+      capture_bases.push({ ...base, digest });
     }
 
-    return JSON.stringify(ocaObj, null, '\t');
+    return { capture_bases, overlays: oca.overlays };
   }
 
   getOverlay<Type extends OverlaySpecType>(
-    oca: string,
+    oca: OCABundle,
     overlay: Type | ReadonlyArray<Type>,
     language: string = 'en'
   ) {
-    const ocaObj = JSON.parse(oca);
-
-    const rootCaptureBase = this._getRootCaptureBase(ocaObj);
+    const rootCaptureBase = this._getRootCaptureBase(oca);
     const rootDigest = rootCaptureBase.digest;
 
-    return this._getOverlayByDigest<Type>(ocaObj, overlay, language, rootDigest);
+    return this._getOverlayByDigest<Type>(oca, overlay, language, rootDigest);
   }
 
   getOverlayByDigest<Type extends OverlaySpecType>(
-    oca: string,
+    oca: OCABundle,
     overlay: Type | ReadonlyArray<Type>,
     language: string,
     digest: string
   ) {
-    const ocaObj = JSON.parse(oca);
-
-    return this._getOverlayByDigest<Type>(ocaObj, overlay, language, digest);
+    return this._getOverlayByDigest<Type>(oca, overlay, language, digest);
   }
 
-  getCaptureBaseByDigest(oca: string, digest: string) {
-    const ocaObj: OCABundle = JSON.parse(oca);
-
-    if (!ocaObj.hasOwnProperty('capture_bases')) {
-      throw Error('OCA has no valid Capture Base');
-    }
-
-    const filteredCaptureBase = ocaObj.capture_bases.filter((c) => c.digest === digest);
+  getCaptureBaseByDigest(oca: OCABundle, digest: string) {
+    const filteredCaptureBase = oca.capture_bases.filter((c) => c.digest === digest);
 
     if (filteredCaptureBase.length > 1) {
       throw Error('OCA has multiple Capture Bases with the same digests');
@@ -104,9 +83,8 @@ export class OCAService {
     }
   }
 
-  getRootCaptureBase(oca: string) {
-    const ocaObj = JSON.parse(oca);
-    return this._getRootCaptureBase(ocaObj);
+  getRootCaptureBase(oca: OCABundle) {
+    return this._getRootCaptureBase(oca);
   }
 
   private _getOverlayByDigest<Type extends OverlaySpecType>(

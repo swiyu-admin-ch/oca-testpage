@@ -8,6 +8,7 @@ import {
   OverlayTypes,
   StandardOverlay
 } from '../../model/oca-capture';
+import { JsonObject, OCABundle } from '../../model/top-level';
 
 @Component({
   selector: 'app-vc-detail',
@@ -17,8 +18,8 @@ import {
   styleUrl: './vc-detail.component.css'
 })
 export class VcDetailComponent {
-  @Input({ required: true }) input!: string;
-  @Input({ required: true }) oca!: string;
+  @Input({ required: true }) input!: JsonObject;
+  @Input({ required: true }) oca!: OCABundle;
 
   vcDisplay: Array<{ type: string; value: string }> = [];
 

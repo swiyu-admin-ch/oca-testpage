@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
+import { JsonObject } from '../model/top-level';
 
 @Component({
   selector: 'app-editor',
@@ -11,8 +12,8 @@ import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 })
 export class EditorComponent {
   @Input()
-  set code(newCode: string) {
-    this._code = newCode;
+  set code(newCode: JsonObject) {
+    this._code = JSON.stringify(newCode, null, '\t');
   }
 
   editorOptions = {
@@ -23,9 +24,9 @@ export class EditorComponent {
   };
   _code: string = '';
 
-  @Output() codeChanged = new EventEmitter<string>();
+  @Output() codeChanged = new EventEmitter<JsonObject>();
 
   onCodeChanged(value: string) {
-    this.codeChanged.emit(value);
+    this.codeChanged.emit(JSON.parse(value));
   }
 }

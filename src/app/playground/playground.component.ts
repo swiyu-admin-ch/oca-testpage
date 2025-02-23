@@ -5,6 +5,7 @@ import { DataService } from '../services/data/data.service';
 import { FormsModule } from '@angular/forms';
 import { Renderer, getRenderer, getRendererSelectionOptions } from '../renderer';
 import { NgFor } from '@angular/common';
+import { JsonObject, OCABundle } from '../model/top-level';
 
 @Component({
   selector: 'app-playground',
@@ -18,8 +19,8 @@ import { NgFor } from '@angular/common';
 })
 export class PlaygroundComponent {
   // Internal properties
-  input = '{}';
-  oca = '';
+  input!: JsonObject;
+  oca!: OCABundle;
 
   // Fields
   get rendererSelectionOptions() {
@@ -39,13 +40,13 @@ export class PlaygroundComponent {
     this.reset();
   }
 
-  onInputChanged(value: string) {
+  onInputChanged(value: JsonObject) {
     this.input = value;
     this.loadViewRenderer();
   }
 
-  onOCAChanged(value: string) {
-    this.oca = value;
+  onOCAChanged(value: JsonObject) {
+    this.oca = value as OCABundle;
     this.loadViewRenderer();
   }
 
@@ -61,8 +62,8 @@ export class PlaygroundComponent {
     }
 
     if (example) {
-      this.input = JSON.stringify(example.input, null, '\t');
-      this.oca = JSON.stringify(example.oca, null, '\t');
+      this.input = example.input;
+      this.oca = example.oca;
     }
   }
 
@@ -80,7 +81,7 @@ export class PlaygroundComponent {
 
   reset(event?: Event) {
     this.oca = this.ocaService.initOCA();
-    this.input = '{}';
+    this.input = {};
     this.loadExampleState = '';
     this.viewRenderComponent?.clear();
   }

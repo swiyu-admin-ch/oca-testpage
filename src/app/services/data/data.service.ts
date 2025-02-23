@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { OCABundle } from '../../model/top-level';
 
 import PersonInput from './example/person.input.json';
 import PersonOCA from './example/person.oca.json';
@@ -15,14 +16,14 @@ export class DataService {
   getPersonExample() {
     return {
       input: PersonInput,
-      oca: PersonOCA
+      oca: PersonOCA as OCABundle
     };
   }
 
   getPetsExample() {
     return {
       input: PetInput,
-      oca: PetOCA
+      oca: PetOCA as unknown as OCABundle
     };
   }
 }
