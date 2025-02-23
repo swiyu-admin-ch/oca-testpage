@@ -26,10 +26,9 @@
         <div>
             <label class="text-gray-800">Load View: </label>
             <select [(ngModel)]="viewRenderState" (change)="loadViewRenderer($event)">
-                <option value=""></option>
-                <option value="vc-preview">VC Preview</option>
-                <option value="vc-list">VC List</option>
-                <option value="vc-detail">VC Detail</option>
+                <option *ngFor="let opt of rendererSelectionOptions" [value]="opt.key">
+                    {{ opt.label }}
+                  </option>
             </select>
         </div>
         <div class="flex flex-1 justify-center items-center">
