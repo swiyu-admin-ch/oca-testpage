@@ -19,13 +19,13 @@
             <button (click)="computeCaptureBaseDigest($event)" class="mr-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">Compute digest</button>
             <button disabled class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">Validate OCA</button>
         </div>
-        <app-editor class="flex-1" [code]="oca" (codeChanged)="onCodeChanged($event)"></app-editor>
+        <app-editor class="flex-1" [code]="oca" (codeChanged)="onOCAChanged($event)"></app-editor>
     </div>
     <div class="flex flex-col">
         <h2 class="text-2xl">Output</h2>
         <div>
             <label class="text-gray-800">Load View: </label>
-            <select [(ngModel)]="viewRenderState" (change)="loadViewRenderer($event)">
+            <select [(ngModel)]="viewRenderSelection" (change)="loadViewRenderer($event)">
                 <option *ngFor="let opt of rendererSelectionOptions" [value]="opt.key">
                     {{ opt.label }}
                   </option>
