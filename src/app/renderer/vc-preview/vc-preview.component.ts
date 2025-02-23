@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { OCAService } from '../../services/oca/oca.service';
 import JsonPath from '../../utils/JsonPath';
 import Colors from '../../utils/Colors';
-import { OverlayType } from '../../model/oca-capture';
+import { OverlayTypes } from '../../model/oca-capture';
 
 @Component({
   selector: 'app-vc-preview',
@@ -27,9 +27,9 @@ export class VcPreviewComponent implements OnInit {
   // FIXME: Error handling
   ngOnInit() {
     const captureBase = this.ocaService.getRootCaptureBase(this.oca);
-    const meta = this.ocaService.getOverlay(this.oca, OverlayType.META, 'en');
-    const branding = this.ocaService.getOverlay(this.oca, OverlayType.BRANDING, 'en');
-    const dataSource = this.ocaService.getOverlay(this.oca, OverlayType.DATA_SOURCE);
+    const meta = this.ocaService.getOverlay(this.oca, OverlayTypes.META, 'en');
+    const branding = this.ocaService.getOverlay(this.oca, OverlayTypes.BRANDING, 'en');
+    const dataSource = this.ocaService.getOverlay(this.oca, OverlayTypes.DATA_SOURCE);
 
     const mappedValues: Record<string, any> = {};
     if (dataSource) {
@@ -48,10 +48,12 @@ export class VcPreviewComponent implements OnInit {
       this.vcFontColor = Colors.isDarkColor(branding.primary_background_color)
         ? '#FFFFFF'
         : '#000000';
-      this.vcSubtitle =
-        branding.primary_field?.replace(/\{\{(.*?)\}\}/g, (_: any, p1: string) =>
+
+      if ('primary_field' in branding && branding.primary_field) {
+        this.vcSubtitle = branding.primary_field.replace(/\{\{(.*?)\}\}/g, (_: any, p1: string) =>
           mappedValues.hasOwnProperty(p1) ? mappedValues[p1] : ''
-        ) ?? '';
+        );
+      }
     }
   }
 }

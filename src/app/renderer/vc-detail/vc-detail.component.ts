@@ -5,7 +5,7 @@ import {
   CaptureBase,
   ClusterOrderingOverlay,
   LabelOverlay,
-  OverlayType,
+  OverlayTypes,
   StandardOverlay
 } from '../../model/oca-capture';
 
@@ -27,10 +27,10 @@ export class VcDetailComponent {
   // FIXME: Error handling
   ngOnInit() {
     const captureBase = this.ocaService.getRootCaptureBase(this.oca);
-    const dataSource = this.ocaService.getOverlay(this.oca, OverlayType.DATA_SOURCE);
-    const labels = this.ocaService.getOverlay(this.oca, OverlayType.LABEL);
-    const clusterOrder = this.ocaService.getOverlay(this.oca, OverlayType.CLUSTER_ORDERING);
-    const standard = this.ocaService.getOverlay(this.oca, OverlayType.STANDARD);
+    const dataSource = this.ocaService.getOverlay(this.oca, OverlayTypes.DATA_SOURCE);
+    const labels = this.ocaService.getOverlay(this.oca, OverlayTypes.LABEL);
+    const clusterOrder = this.ocaService.getOverlay(this.oca, OverlayTypes.CLUSTER_ORDERING);
+    const standard = this.ocaService.getOverlay(this.oca, OverlayTypes.STANDARD);
 
     const mappedValues: Record<string, any> = {};
     if (dataSource) {
@@ -114,19 +114,19 @@ export class VcDetailComponent {
             const refCaptureBase = this.ocaService.getCaptureBaseByDigest(this.oca, refDigest);
             const refClusterOrder = this.ocaService.getOverlayByDigest(
               this.oca,
-              OverlayType.CLUSTER_ORDERING,
+              OverlayTypes.CLUSTER_ORDERING,
               'en',
               refDigest
             );
             const refStandard = this.ocaService.getOverlayByDigest(
               this.oca,
-              OverlayType.STANDARD,
+              OverlayTypes.STANDARD,
               'en',
               refDigest
             );
             const refLabels = this.ocaService.getOverlayByDigest(
               this.oca,
-              OverlayType.LABEL,
+              OverlayTypes.LABEL,
               'en',
               refDigest
             );

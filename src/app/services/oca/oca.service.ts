@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { computeSHA256CESRDigest } from '../../utils/CESR';
-import { CaptureBase, CommonOverlay, Overlay, OverlayType } from '../../model/oca-capture';
+import { CaptureBase, Overlay, OverlaySpecType } from '../../model/oca-capture';
 import { OCABundle } from '../../model/oca-bundle';
 
 @Injectable({
@@ -62,7 +62,11 @@ export class OCAService {
     return JSON.stringify(ocaObj, null, '\t');
   }
 
-  getOverlay<Type extends OverlayType>(oca: string, overlay: Type, language: string = 'en') {
+  getOverlay<Type extends OverlaySpecType>(
+    oca: string,
+    overlay: Type | ReadonlyArray<Type>,
+    language: string = 'en'
+  ) {
     const ocaObj = JSON.parse(oca);
 
     const rootCaptureBase = this._getRootCaptureBase(ocaObj);
@@ -71,9 +75,9 @@ export class OCAService {
     return this._getOverlayByDigest<Type>(ocaObj, overlay, language, rootDigest);
   }
 
-  getOverlayByDigest<Type extends OverlayType>(
+  getOverlayByDigest<Type extends OverlaySpecType>(
     oca: string,
-    overlay: Type,
+    overlay: Type | ReadonlyArray<Type>,
     language: string,
     digest: string
   ) {
@@ -105,20 +109,25 @@ export class OCAService {
     return this._getRootCaptureBase(ocaObj);
   }
 
-  private _getOverlayByDigest<Type extends OverlayType>(
+  private _getOverlayByDigest<Type extends OverlaySpecType>(
     ocaObj: OCABundle,
-    overlay: Type,
+    overlay: Type | ReadonlyArray<Type>,
     language: string,
     digest: string
   ): Overlay<Type> | undefined {
-    const result = ocaObj.overlays.find(
-      (o) =>
-        o.type === overlay &&
-        o.capture_base === digest &&
-        ('language' in o ? o.language === language : true)
-    );
-
-    return result as Overlay<Type>;
+    const types: ReadonlyArray<Type> = Array.isArray(overlay) ? overlay : [overlay];
+    for (const type of types) {
+      const result = ocaObj.overlays.find(
+        (o) =>
+          o.type === type &&
+          o.capture_base === digest &&
+          ('language' in o ? o.language === language : true)
+      );
+      if (result) {
+        return result as Overlay<Type>;
+      }
+    }
+    return undefined;
   }
 
   private _getRootCaptureBase(ocaObj: OCABundle): CaptureBase {
