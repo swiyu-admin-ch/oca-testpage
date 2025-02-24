@@ -25,9 +25,14 @@ export class EditorComponent {
   _code: string = '';
 
   @Output() codeChanged = new EventEmitter<JsonObject>();
+  @Output() invalid = new EventEmitter<string>();
 
   onCodeChanged(value: string) {
-    // TODO: add error handling
-    this.codeChanged.emit(JSON.parse(value));
+    try {
+      const code = JSON.parse(value);
+      this.codeChanged.emit(code);
+    } catch (e) {
+      this.invalid.emit(`Invalid JSON: ${e}`);
+    }
   }
 }

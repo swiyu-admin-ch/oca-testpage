@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { Renderer, getRenderer, getRendererSelectionOptions } from '../renderer';
 import { NgFor } from '@angular/common';
 import { JsonObject, OCABundle } from '../model/top-level';
+import { ErrorComponent } from '../renderer/error/error.component';
 
 @Component({
   selector: 'app-playground',
@@ -21,9 +22,11 @@ export class PlaygroundComponent {
   // Internal properties
   inputModel!: JsonObject;
   inputUserModifications!: JsonObject;
+  inputError: string | undefined;
 
   ocaModel!: OCABundle;
   ocaUserModifications!: OCABundle;
+  ocaError: string | undefined;
 
   // Fields
   get rendererSelectionOptions() {
@@ -44,14 +47,26 @@ export class PlaygroundComponent {
   }
 
   onInputChanged(value: JsonObject) {
+    this.inputError = undefined;
     this.inputUserModifications = value;
-    this.loadViewRenderer();
+    this.updateViewRenderer();
+  }
+
+  onInputError(value: string) {
+    this.inputError = value;
+    this.updateViewRenderer();
   }
 
   onOCAChanged(value: JsonObject) {
+    this.ocaError = undefined;
     // TODO: add validation
     this.ocaUserModifications = value as OCABundle;
-    this.loadViewRenderer();
+    this.updateViewRenderer();
+  }
+
+  onOCAError(value: string) {
+    this.ocaError = value;
+    this.updateViewRenderer();
   }
 
   loadExample(event: Event) {
@@ -73,8 +88,16 @@ export class PlaygroundComponent {
     }
   }
 
-  loadViewRenderer(event?: Event) {
+  updateViewRenderer(event?: Event) {
     this.viewRenderComponent?.clear();
+
+    if (this.inputError || this.ocaError) {
+      const viewComponent = this.viewRenderComponent?.createComponent(ErrorComponent);
+      viewComponent?.setInput('title', this.inputError ? 'Input Error' : 'OCA Error');
+      viewComponent?.setInput('description', this.inputError || this.ocaError);
+      return;
+    }
+
     const viewComponent = this.viewRenderComponent?.createComponent(
       getRenderer(this.viewRenderSelection)
     );
