@@ -11,6 +11,7 @@ import {
   OCABundle
 } from '../../model';
 import { LanguageSelectionComponent } from '../language-selection/language-selection.component';
+import { getOverlayByDigest, getRootCaptureBase } from '../../utils/OCA';
 
 @Component({
   selector: 'app-vc-detail',
@@ -39,7 +40,7 @@ export class VcDetailComponent {
 
   // FIXME: Error handling
   private update() {
-    const captureBase = this.ocaService.getRootCaptureBase(this.oca);
+    const captureBase = getRootCaptureBase(this.oca);
     const dataSource = this.ocaService.getOverlay(this.oca, OverlayTypes.DATA_SOURCE);
     const labels = this.ocaService.getOverlay(this.oca, OverlayTypes.LABEL, this.language);
     const clusterOrder = this.ocaService.getOverlay(
@@ -132,23 +133,18 @@ export class VcDetailComponent {
               : attributeType.slice(11, -1);
 
             const refCaptureBase = this.ocaService.getCaptureBaseByDigest(this.oca, refDigest);
-            const refClusterOrder = this.ocaService.getOverlayByDigest(
+            const refClusterOrder = getOverlayByDigest(
               this.oca,
               OverlayTypes.CLUSTER_ORDERING,
-              this.language,
-              refDigest
+              refDigest,
+              this.language
             );
-            const refStandard = this.ocaService.getOverlayByDigest(
-              this.oca,
-              OverlayTypes.STANDARD,
-              this.language,
-              refDigest
-            );
-            const refLabels = this.ocaService.getOverlayByDigest(
+            const refStandard = getOverlayByDigest(this.oca, OverlayTypes.STANDARD, refDigest);
+            const refLabels = getOverlayByDigest(
               this.oca,
               OverlayTypes.LABEL,
-              this.language,
-              refDigest
+              refDigest,
+              this.language
             );
             const refMappedValue = values[i][attributeValue];
 

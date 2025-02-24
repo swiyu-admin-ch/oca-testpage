@@ -64,13 +64,13 @@ export class PlaygroundComponent {
 
   onOCAChanged(value: JsonObject) {
     this.ocaError = undefined;
-    try {
-      validateOCABundle(value);
-    } catch (e) {
-      this.ocaError = `Bundle validation: ${e}`;
-    }
     this.ocaUserModifications = value as OCABundle;
-    this.updateViewRenderer();
+
+    validateOCABundle(value)
+      .catch((e) => {
+        this.ocaError = `Bundle validation: ${e}`;
+      })
+      .finally(() => this.updateViewRenderer());
   }
 
   onOCAError(value: string) {

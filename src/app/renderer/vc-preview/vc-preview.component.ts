@@ -4,6 +4,7 @@ import JsonPath from '../../utils/JsonPath';
 import Colors from '../../utils/Colors';
 import { OverlayTypes, JsonObject, OCABundle } from '../../model';
 import { LanguageSelectionComponent } from '../language-selection/language-selection.component';
+import { getRootCaptureBase } from '../../utils/OCA';
 
 @Component({
   selector: 'app-vc-preview',
@@ -37,7 +38,7 @@ export class VcPreviewComponent implements OnInit {
 
   // FIXME: Error handling
   private update() {
-    const captureBase = this.ocaService.getRootCaptureBase(this.oca);
+    const captureBase = getRootCaptureBase(this.oca);
     const meta = this.ocaService.getOverlay(this.oca, OverlayTypes.META, this.language);
     const branding = this.ocaService.getOverlay(this.oca, OverlayTypes.BRANDING, this.language);
     const dataSource = this.ocaService.getOverlay(this.oca, OverlayTypes.DATA_SOURCE);

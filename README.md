@@ -11,7 +11,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 - Support for the root capture base ✔️
 - Adapt project for the Oblique framework ❌
-- Validation of OCA bundle ❌
+- Validation of OCA bundle ✔️
 - Support for nested capture bases ❌
 
 ## Development server
