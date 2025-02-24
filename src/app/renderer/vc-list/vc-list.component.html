@@ -1,33 +1,36 @@
-<div class="min-w-80 divide-y">
-    <div class="flex p-4">
-        <div class="h-24 w-20 rounded-2xl flex flex-col justify-center items-center bg-gray-400">
+<div>
+    <app-language-selection [oca]="oca" (languageChanged)="onLanguage($event)"></app-language-selection>
+    <div class="min-w-80 divide-y">
+        <div class="flex p-4">
+            <div class="h-24 w-20 rounded-2xl flex flex-col justify-center items-center bg-gray-400">
+            </div>
+            <div class="flex-1 p-2 flex flex-col">
+                <span class="font-bold">Credential Name</span>
+                <span>Someone</span>
+                <span class="text-xs">✓ valid</span>
+            </div>
+            <div class="self-center">></div>
         </div>
-        <div class="flex-1 p-2 flex flex-col">
-            <span class="font-bold">Credential Name</span>
-            <span>Someone</span>
-            <span class="text-xs">✓ valid</span>
+        <div class="flex p-4">
+            <div class="h-24 w-20 rounded-2xl flex flex-col justify-center items-center" [style.background]="'linear-gradient(' + this.vcPrimaryBackgroundStart + ', ' + this.vcPrimaryBackgroundEnd + ')'">
+                <img class="h-4" [src]="vcLogo"/>
+            </div>
+            <div class="flex-1 p-2 flex flex-col">
+                <span class="font-bold">{{vcName}}</span>
+                <span>{{vcSubtitle}}</span>
+                <span class="text-xs">✓ valid</span>
+            </div>
+            <div class="self-center">></div>
         </div>
-        <div class="self-center">></div>
-    </div>
-    <div class="flex p-4">
-        <div class="h-24 w-20 rounded-2xl flex flex-col justify-center items-center" [style.background]="'linear-gradient(' + this.vcPrimaryBackgroundStart + ', ' + this.vcPrimaryBackgroundEnd + ')'">
-            <img class="h-4" [src]="vcLogo"/>
+        <div class="flex p-4">
+            <div class="h-24 w-20 rounded-2xl flex flex-col justify-center items-center bg-gray-400">
+            </div>
+            <div class="flex-1 p-2 flex flex-col">
+                <span class="font-bold">Credential Name</span>
+                <span>Someone</span>
+                <span class="text-xs">✓ valid</span>
+            </div>
+            <div class="self-center">></div>
         </div>
-        <div class="flex-1 p-2 flex flex-col">
-            <span class="font-bold">{{vcName}}</span>
-            <span>{{vcSubtitle}}</span>
-            <span class="text-xs">✓ valid</span>
-        </div>
-        <div class="self-center">></div>
-    </div>
-    <div class="flex p-4">
-        <div class="h-24 w-20 rounded-2xl flex flex-col justify-center items-center bg-gray-400">
-        </div>
-        <div class="flex-1 p-2 flex flex-col">
-            <span class="font-bold">Credential Name</span>
-            <span>Someone</span>
-            <span class="text-xs">✓ valid</span>
-        </div>
-        <div class="self-center">></div>
     </div>
 </div>

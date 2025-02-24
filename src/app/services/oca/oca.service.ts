@@ -87,6 +87,16 @@ export class OCAService {
     return this._getRootCaptureBase(oca);
   }
 
+  getLanguages(oca: OCABundle) {
+    const result = oca.overlays.reduce((aggr, overlay) => {
+      if ('language' in overlay && overlay.language) {
+        aggr.add(overlay.language);
+      }
+      return aggr;
+    }, new Set<string>());
+    return Array.from(result);
+  }
+
   private _getOverlayByDigest<Type extends OverlaySpecType>(
     ocaObj: OCABundle,
     overlay: Type | ReadonlyArray<Type>,

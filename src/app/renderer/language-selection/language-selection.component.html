@@ -1,0 +1,8 @@
+<div>
+    <label class="text-gray-800">Language: </label>
+    <select [(ngModel)]="selected" (change)="onChanged($event)">
+        <option *ngFor="let opt of selectionOptions" [value]="opt">
+            {{ opt }}
+          </option>
+    </select>
+</div>

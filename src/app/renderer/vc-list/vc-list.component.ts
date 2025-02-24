@@ -4,11 +4,12 @@ import JsonPath from '../../utils/JsonPath';
 import Colors from '../../utils/Colors';
 import { OverlayTypes } from '../../model/oca-capture';
 import { JsonObject, OCABundle } from '../../model/top-level';
+import { LanguageSelectionComponent } from '../language-selection/language-selection.component';
 
 @Component({
   selector: 'app-vc-list',
   standalone: true,
-  imports: [],
+  imports: [LanguageSelectionComponent],
   templateUrl: './vc-list.component.html',
   styleUrl: './vc-list.component.css'
 })
@@ -24,11 +25,21 @@ export class VcListComponent {
 
   constructor(private ocaService: OCAService) {}
 
-  // FIXME: Error handling
   ngOnInit() {
+    this.update();
+  }
+
+  language = 'en';
+  onLanguage(value: string) {
+    this.language = value;
+    this.update();
+  }
+
+  // FIXME: Error handling
+  private update() {
     const captureBase = this.ocaService.getRootCaptureBase(this.oca);
-    const meta = this.ocaService.getOverlay(this.oca, OverlayTypes.META, 'en');
-    const branding = this.ocaService.getOverlay(this.oca, OverlayTypes.BRANDING, 'en');
+    const meta = this.ocaService.getOverlay(this.oca, OverlayTypes.META, this.language);
+    const branding = this.ocaService.getOverlay(this.oca, OverlayTypes.BRANDING, this.language);
     const dataSource = this.ocaService.getOverlay(this.oca, OverlayTypes.DATA_SOURCE);
 
     const mappedValues: Record<string, any> = {};

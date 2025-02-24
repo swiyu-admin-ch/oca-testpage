@@ -9,11 +9,12 @@ import {
   StandardOverlay
 } from '../../model/oca-capture';
 import { JsonObject, OCABundle } from '../../model/top-level';
+import { LanguageSelectionComponent } from '../language-selection/language-selection.component';
 
 @Component({
   selector: 'app-vc-detail',
   standalone: true,
-  imports: [],
+  imports: [LanguageSelectionComponent],
   templateUrl: './vc-detail.component.html',
   styleUrl: './vc-detail.component.css'
 })
@@ -25,12 +26,26 @@ export class VcDetailComponent {
 
   constructor(private ocaService: OCAService) {}
 
-  // FIXME: Error handling
   ngOnInit() {
+    this.update();
+  }
+
+  language = 'en';
+  onLanguage(value: string) {
+    this.language = value;
+    this.update();
+  }
+
+  // FIXME: Error handling
+  private update() {
     const captureBase = this.ocaService.getRootCaptureBase(this.oca);
     const dataSource = this.ocaService.getOverlay(this.oca, OverlayTypes.DATA_SOURCE);
-    const labels = this.ocaService.getOverlay(this.oca, OverlayTypes.LABEL);
-    const clusterOrder = this.ocaService.getOverlay(this.oca, OverlayTypes.CLUSTER_ORDERING);
+    const labels = this.ocaService.getOverlay(this.oca, OverlayTypes.LABEL, this.language);
+    const clusterOrder = this.ocaService.getOverlay(
+      this.oca,
+      OverlayTypes.CLUSTER_ORDERING,
+      this.language
+    );
     const standard = this.ocaService.getOverlay(this.oca, OverlayTypes.STANDARD);
 
     const mappedValues: Record<string, any> = {};
@@ -52,7 +67,7 @@ export class VcDetailComponent {
     }
   }
 
-  parseClusterOrder(
+  private parseClusterOrder(
     captureBase: CaptureBase,
     values: any,
     clusterOrder: ClusterOrderingOverlay,
@@ -116,19 +131,19 @@ export class VcDetailComponent {
             const refClusterOrder = this.ocaService.getOverlayByDigest(
               this.oca,
               OverlayTypes.CLUSTER_ORDERING,
-              'en',
+              this.language,
               refDigest
             );
             const refStandard = this.ocaService.getOverlayByDigest(
               this.oca,
               OverlayTypes.STANDARD,
-              'en',
+              this.language,
               refDigest
             );
             const refLabels = this.ocaService.getOverlayByDigest(
               this.oca,
               OverlayTypes.LABEL,
-              'en',
+              this.language,
               refDigest
             );
             const refMappedValue = values[i][attributeValue];
