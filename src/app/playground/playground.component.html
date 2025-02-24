@@ -10,7 +10,7 @@
                 <option value="pets">Pet Permit</option>
             </select>
         </div>
-        <app-editor class="flex-1" [code]="input" (codeChanged)="onInputChanged($event)"></app-editor>
+        <app-editor class="flex-1" [code]="inputModel" (codeChanged)="onInputChanged($event)"></app-editor>
     </div>
     <div class="flex flex-col">
         <h2 class="text-2xl">OCA Bundle</h2>
@@ -19,7 +19,7 @@
             <button (click)="computeCaptureBaseDigest($event)" class="mr-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">Compute digest</button>
             <button disabled class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">Validate OCA</button>
         </div>
-        <app-editor class="flex-1" [code]="oca" (codeChanged)="onOCAChanged($event)"></app-editor>
+        <app-editor class="flex-1" [code]="ocaModel" (codeChanged)="onOCAChanged($event)"></app-editor>
     </div>
     <div class="flex flex-col">
         <h2 class="text-2xl">Output</h2>

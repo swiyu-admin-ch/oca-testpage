@@ -27,6 +27,7 @@ export class EditorComponent {
   @Output() codeChanged = new EventEmitter<JsonObject>();
 
   onCodeChanged(value: string) {
+    // TODO: add error handling
     this.codeChanged.emit(JSON.parse(value));
   }
 }

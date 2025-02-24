@@ -19,8 +19,11 @@ import { JsonObject, OCABundle } from '../model/top-level';
 })
 export class PlaygroundComponent {
   // Internal properties
-  input!: JsonObject;
-  oca!: OCABundle;
+  inputModel!: JsonObject;
+  inputUserModifications!: JsonObject;
+
+  ocaModel!: OCABundle;
+  ocaUserModifications!: OCABundle;
 
   // Fields
   get rendererSelectionOptions() {
@@ -41,12 +44,13 @@ export class PlaygroundComponent {
   }
 
   onInputChanged(value: JsonObject) {
-    this.input = value;
+    this.inputUserModifications = value;
     this.loadViewRenderer();
   }
 
   onOCAChanged(value: JsonObject) {
-    this.oca = value as OCABundle;
+    // TODO: add validation
+    this.ocaUserModifications = value as OCABundle;
     this.loadViewRenderer();
   }
 
@@ -62,8 +66,10 @@ export class PlaygroundComponent {
     }
 
     if (example) {
-      this.input = example.input;
-      this.oca = example.oca;
+      this.inputModel = example.input;
+      this.inputUserModifications = example.input;
+      this.ocaModel = example.oca;
+      this.ocaUserModifications = example.oca;
     }
   }
 
@@ -73,24 +79,24 @@ export class PlaygroundComponent {
       getRenderer(this.viewRenderSelection)
     );
 
-    if (viewComponent) {
-      viewComponent.setInput('input', this.input);
-      viewComponent.setInput('oca', this.oca);
-    }
+    viewComponent?.setInput('input', this.inputUserModifications);
+    viewComponent?.setInput('oca', this.ocaUserModifications);
   }
 
   reset(event?: Event) {
-    this.oca = this.ocaService.initOCA();
-    this.input = {};
+    this.ocaModel = this.ocaService.initOCA();
+    this.ocaUserModifications = this.ocaModel;
+    this.inputModel = {};
+    this.inputUserModifications = this.inputModel;
     this.loadExampleState = '';
     this.viewRenderComponent?.clear();
   }
 
   addCaptureBase(event: Event) {
-    this.oca = this.ocaService.addCaptureBase(this.oca);
+    this.ocaModel = this.ocaService.addCaptureBase(this.ocaUserModifications);
   }
 
   async computeCaptureBaseDigest(event: Event) {
-    this.oca = await this.ocaService.computeDigests(this.oca);
+    this.ocaModel = await this.ocaService.computeDigests(this.ocaUserModifications);
   }
 }
