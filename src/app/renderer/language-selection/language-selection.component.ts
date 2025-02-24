@@ -19,11 +19,10 @@ export class LanguageSelectionComponent {
   @Input({ required: true })
   set oca(oca: OCABundle) {
     this.selectionOptions = this.ocaService.getLanguages(oca);
-    if (!this.selectionOptions.length) {
-      this.selectionOptions.push('en');
-    }
     this.selected = this.selectionOptions[0];
-    this.onChanged();
+    if (this.selected) {
+      this.onChanged();
+    }
   }
 
   @Output() languageChanged = new EventEmitter<string>();
