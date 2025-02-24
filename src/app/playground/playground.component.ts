@@ -7,6 +7,7 @@ import { Renderer, getRenderer, getRendererSelectionOptions } from '../renderer'
 import { NgFor } from '@angular/common';
 import { JsonObject, OCABundle } from '../model';
 import { ErrorComponent } from '../renderer/error/error.component';
+import { validateOCABundle } from '../validator/bundle';
 
 @Component({
   selector: 'app-playground',
@@ -63,7 +64,11 @@ export class PlaygroundComponent {
 
   onOCAChanged(value: JsonObject) {
     this.ocaError = undefined;
-    // TODO: add validation
+    try {
+      validateOCABundle(value);
+    } catch (e) {
+      this.ocaError = `Bundle validation: ${e}`;
+    }
     this.ocaUserModifications = value as OCABundle;
     this.updateViewRenderer();
   }
@@ -74,9 +79,7 @@ export class PlaygroundComponent {
   }
 
   loadExample(event: Event) {
-    const example = this.dataService
-      .getExamples()
-      .find((example) => example.id === this.loadExampleState);
+    const example = this.examples.find((example) => example.id === this.loadExampleState);
 
     if (example) {
       this.inputModel = example.input;

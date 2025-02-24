@@ -1,22 +1,22 @@
 import { Injectable } from '@angular/core';
 import { computeSHA256CESRDigest } from '../../utils/CESR';
-import { CaptureBase, Overlay, OverlaySpecType, OCABundle } from '../../model';
+import { CaptureBase, Overlay, OverlaySpecType, OCABundle, CaptureBaseSpecType } from '../../model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OCAService {
-  private cesrDummy: string = '############################################';
-  private captureBaseDummy: CaptureBase = {
-    type: 'spec/capture_base/1.0',
+  private readonly cesrDummy: string = '############################################';
+  private readonly captureBaseDummy: CaptureBase = {
+    type: CaptureBaseSpecType.BASE_1_0,
     digest: '############################################',
     attributes: {
       firstname: 'Text',
       lastname: 'Text'
     }
   };
-  private nestedCaptureBaseDummy: CaptureBase = {
-    type: 'spec/capture_base/1.0',
+  private readonly nestedCaptureBaseDummy: CaptureBase = {
+    type: CaptureBaseSpecType.BASE_1_0,
     digest: '############################################',
     attributes: {
       title: 'Test',
