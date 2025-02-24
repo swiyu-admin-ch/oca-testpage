@@ -1,12 +1,17 @@
 import { Schema } from 'jsonschema';
 import { CaptureBaseSpecType, OverlaySpecType } from '../model';
 
+const SAID_PATTERN = /^[A-Za-z0-9_\-]+$/;
+
 export const CAPTURE_BASE_SCHEMA: Schema = {
   id: CaptureBaseSpecType.BASE_1_0,
   type: 'object',
   properties: {
     type: { const: CaptureBaseSpecType.BASE_1_0 },
-    digest: { type: 'string' },
+    digest: {
+      type: 'string',
+      pattern: SAID_PATTERN
+    },
     classification: { type: 'string' },
     attributes: {
       type: 'object',
@@ -120,7 +125,7 @@ const BRANDING_1_1_OVERLAY_SCHEMA: Schema = {
     theme: { type: 'string' },
     logo: {
       type: 'string',
-      pattern: '^data\\:'
+      pattern: /^data\:.+;base64,/
     },
     primary_background_color: { type: 'string' },
     primary_field: { type: 'string' },
@@ -202,7 +207,10 @@ export const OVERLAY_SCHEMA: Schema = {
   type: 'object',
   properties: {
     type: { type: 'string' },
-    capture_base: { type: 'string' }
+    capture_base: {
+      type: 'string',
+      pattern: SAID_PATTERN
+    }
   },
   required: ['type', 'capture_base'],
   allOf: KNOWN_OVERLAY_SCHEMAS.map((schema) => ({

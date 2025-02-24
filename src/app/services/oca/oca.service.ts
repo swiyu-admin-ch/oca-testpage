@@ -9,7 +9,7 @@ export class OCAService {
   private readonly cesrDummy: string = '############################################';
   private readonly captureBaseDummy: CaptureBase = {
     type: CaptureBaseSpecType.BASE_1_0,
-    digest: '############################################',
+    digest: 'IEsMrJ1buvWSv-Lh_yooVZ22PY6fUKnDt19u6-Y8vKwG',
     attributes: {
       firstname: 'Text',
       lastname: 'Text'
