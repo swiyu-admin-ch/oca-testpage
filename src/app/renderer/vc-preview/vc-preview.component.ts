@@ -3,19 +3,19 @@ import { OCAService } from '../../services/oca/oca.service';
 import JsonPath from '../../utils/JsonPath';
 import Colors from '../../utils/Colors';
 import { OverlayTypes, JsonObject, OCABundle } from '../../model';
-import { LanguageSelectionComponent } from '../language-selection/language-selection.component';
 import { getRootCaptureBase } from '../../utils/OCA';
 
 @Component({
   selector: 'app-vc-preview',
   standalone: true,
-  imports: [LanguageSelectionComponent],
+  imports: [],
   templateUrl: './vc-preview.component.html',
   styleUrl: './vc-preview.component.css'
 })
 export class VcPreviewComponent implements OnInit {
   @Input({ required: true }) input!: JsonObject;
   @Input({ required: true }) oca!: OCABundle;
+  @Input({ required: true }) language!: string;
 
   vcName = '';
   vcSubtitle = '';
@@ -27,12 +27,6 @@ export class VcPreviewComponent implements OnInit {
   constructor(private ocaService: OCAService) {}
 
   ngOnInit() {
-    this.update();
-  }
-
-  language = 'en';
-  onLanguage(value: string) {
-    this.language = value;
     this.update();
   }
 

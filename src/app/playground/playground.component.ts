@@ -8,6 +8,7 @@ import { NgFor } from '@angular/common';
 import { JsonObject, OCABundle } from '../model';
 import { ErrorComponent } from '../renderer/error/error.component';
 import { validateOCABundle } from '../validator/bundle';
+import { LanguageSelectionComponent } from '../renderer/language-selection/language-selection.component';
 
 @Component({
   selector: 'app-playground',
@@ -15,7 +16,7 @@ import { validateOCABundle } from '../validator/bundle';
     class: 'h-full'
   },
   standalone: true,
-  imports: [FormsModule, EditorComponent, NgFor],
+  imports: [FormsModule, EditorComponent, NgFor, LanguageSelectionComponent],
   templateUrl: './playground.component.html',
   styleUrl: './playground.component.css'
 })
@@ -49,6 +50,12 @@ export class PlaygroundComponent {
     private dataService: DataService
   ) {
     this.reset();
+  }
+
+  language = 'en';
+  onLanguage(value: string) {
+    this.language = value;
+    this.updateViewRenderer();
   }
 
   onInputChanged(value: JsonObject) {
@@ -105,6 +112,7 @@ export class PlaygroundComponent {
 
     viewComponent?.setInput('input', this.inputUserModifications);
     viewComponent?.setInput('oca', this.ocaUserModifications);
+    viewComponent?.setInput('language', this.language);
   }
 
   reset(event?: Event) {
@@ -113,6 +121,7 @@ export class PlaygroundComponent {
     this.inputModel = {};
     this.inputUserModifications = this.inputModel;
     this.loadExampleState = '';
+    this.language = 'en';
     this.viewRenderComponent?.clear();
   }
 

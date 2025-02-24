@@ -1,15 +1,12 @@
-<div>
-    <app-language-selection [oca]="oca" (languageChanged)="onLanguage($event)"></app-language-selection>
-    <div class="w-80 h-96 p-4 flex rounded-3xl" [style.background]="'linear-gradient(' + this.vcPrimaryBackgroundStart + ', ' + this.vcPrimaryBackgroundEnd + ')'" [style.color]="vcFontColor">
-        <div class="flex-1 flex flex-col">
-            <span class="font-bold">{{vcName}}</span>
-            <div>{{vcSubtitle}}</div>
-            <div class="mt-auto">
-                <span class="p-2 rounded-full border-solid border-2 border-white">✓ valid</span>
-            </div>
+<div class="w-80 h-96 p-4 flex rounded-3xl" [style.background]="'linear-gradient(' + this.vcPrimaryBackgroundStart + ', ' + this.vcPrimaryBackgroundEnd + ')'" [style.color]="vcFontColor">
+    <div class="flex-1 flex flex-col">
+        <span class="font-bold">{{vcName}}</span>
+        <div>{{vcSubtitle}}</div>
+        <div class="mt-auto">
+            <span class="p-2 rounded-full border-solid border-2 border-white">✓ valid</span>
         </div>
-        <div class="flex-1">
-            <img class="h-8 ml-auto" [src]="vcLogo"/>
-        </div>
+    </div>
+    <div class="flex-1">
+        <img class="h-8 ml-auto" [src]="vcLogo"/>
     </div>
 </div>

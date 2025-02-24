@@ -10,31 +10,25 @@ import {
   JsonObject,
   OCABundle
 } from '../../model';
-import { LanguageSelectionComponent } from '../language-selection/language-selection.component';
 import { getOverlayByDigest, getRootCaptureBase } from '../../utils/OCA';
 
 @Component({
   selector: 'app-vc-detail',
   standalone: true,
-  imports: [LanguageSelectionComponent],
+  imports: [],
   templateUrl: './vc-detail.component.html',
   styleUrl: './vc-detail.component.css'
 })
 export class VcDetailComponent {
   @Input({ required: true }) input!: JsonObject;
   @Input({ required: true }) oca!: OCABundle;
+  @Input({ required: true }) language!: string;
 
   vcDisplay: Array<{ type: string; value: string }> = [];
 
   constructor(private ocaService: OCAService) {}
 
   ngOnInit() {
-    this.update();
-  }
-
-  language = 'en';
-  onLanguage(value: string) {
-    this.language = value;
     this.update();
   }
 

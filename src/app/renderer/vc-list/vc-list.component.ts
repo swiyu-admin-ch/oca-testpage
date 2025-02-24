@@ -3,19 +3,19 @@ import { OCAService } from '../../services/oca/oca.service';
 import JsonPath from '../../utils/JsonPath';
 import Colors from '../../utils/Colors';
 import { OverlayTypes, JsonObject, OCABundle } from '../../model';
-import { LanguageSelectionComponent } from '../language-selection/language-selection.component';
 import { getRootCaptureBase } from '../../utils/OCA';
 
 @Component({
   selector: 'app-vc-list',
   standalone: true,
-  imports: [LanguageSelectionComponent],
+  imports: [],
   templateUrl: './vc-list.component.html',
   styleUrl: './vc-list.component.css'
 })
 export class VcListComponent {
   @Input({ required: true }) input!: JsonObject;
   @Input({ required: true }) oca!: OCABundle;
+  @Input({ required: true }) language!: string;
 
   vcName = '';
   vcSubtitle = '';
@@ -26,12 +26,6 @@ export class VcListComponent {
   constructor(private ocaService: OCAService) {}
 
   ngOnInit() {
-    this.update();
-  }
-
-  language = 'en';
-  onLanguage(value: string) {
-    this.language = value;
     this.update();
   }
 
