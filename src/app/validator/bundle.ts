@@ -1,13 +1,9 @@
 import { Validator, Schema } from 'jsonschema';
-import { CAPTURE_BASE_SCHEMA, UNKNOWN_OVERLAY_SCHEMA, KNOWN_OVERLAY_SCHEMAS } from './item-schema';
+import { CAPTURE_BASE_SCHEMA, OVERLAY_SCHEMA } from './item-schema';
 
 const jsonSchemaValidator = new Validator();
-
 jsonSchemaValidator.addSchema(CAPTURE_BASE_SCHEMA);
-jsonSchemaValidator.addSchema(UNKNOWN_OVERLAY_SCHEMA);
-KNOWN_OVERLAY_SCHEMAS.forEach((schema) => {
-  jsonSchemaValidator.addSchema(schema);
-});
+jsonSchemaValidator.addSchema(OVERLAY_SCHEMA);
 
 const bundleSchema: Schema = {
   id: 'OCABundle',
@@ -24,14 +20,7 @@ const bundleSchema: Schema = {
     overlays: {
       type: 'array',
       items: {
-        oneOf: [
-          ...KNOWN_OVERLAY_SCHEMAS.map((schema) => ({
-            $ref: schema.id
-          })),
-          {
-            $ref: UNKNOWN_OVERLAY_SCHEMA.id
-          }
-        ]
+        $ref: OVERLAY_SCHEMA.id
       },
       uniqueItems: true
     }

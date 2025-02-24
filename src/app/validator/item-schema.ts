@@ -22,37 +22,196 @@ export const CAPTURE_BASE_SCHEMA: Schema = {
   required: ['digest', 'type', 'attributes']
 };
 
-export const META_OVERLAY_SCHEMA: Schema = {
+// Overlays
+const COMMON = {
+  properties: {
+    capture_base: { type: 'string' }
+  },
+  required: ['type', 'capture_base']
+};
+
+const COMMON_LOCALIZED = {
+  properties: {
+    ...COMMON.properties,
+    language: { type: 'string' }
+  },
+  required: [...COMMON.required, 'language']
+};
+
+const META_OVERLAY_SCHEMA: Schema = {
   id: OverlaySpecType.META_1_0,
   type: 'object',
   properties: {
     type: { const: OverlaySpecType.META_1_0 },
-    capture_base: { type: 'string' },
-    language: { type: 'string' },
+    ...COMMON_LOCALIZED.properties,
     name: { type: 'string' },
     description: { type: 'string' }
   },
   additionalProperties: false,
-  required: ['type', 'capture_base', 'language', 'name']
+  required: [...COMMON_LOCALIZED.required, 'name']
 };
 
-export const KNOWN_OVERLAY_SCHEMAS = [META_OVERLAY_SCHEMA];
+const FORMAT_OVERLAY_SCHEMA: Schema = {
+  id: OverlaySpecType.FORMAT_1_0,
+  type: 'object',
+  properties: {
+    type: { const: OverlaySpecType.FORMAT_1_0 },
+    ...COMMON.properties,
+    attribute_formats: {
+      type: 'object',
+      additionalProperties: { type: 'string' }
+    }
+  },
+  additionalProperties: false,
+  required: [...COMMON.required, 'attribute_formats']
+};
 
-export const UNKNOWN_OVERLAY_SCHEMA: Schema = {
+const STANDARD_OVERLAY_SCHEMA: Schema = {
+  id: OverlaySpecType.STANDARD_1_0,
+  type: 'object',
+  properties: {
+    type: { const: OverlaySpecType.STANDARD_1_0 },
+    ...COMMON.properties,
+    attr_standards: {
+      type: 'object',
+      additionalProperties: { type: 'string' }
+    }
+  },
+  additionalProperties: false,
+  required: [...COMMON.required, 'attr_standards']
+};
+
+const LABEL_OVERLAY_SCHEMA: Schema = {
+  id: OverlaySpecType.LABEL_1_0,
+  type: 'object',
+  properties: {
+    type: { const: OverlaySpecType.LABEL_1_0 },
+    ...COMMON_LOCALIZED.properties,
+    attribute_labels: {
+      type: 'object',
+      additionalProperties: { type: 'string' }
+    }
+  },
+  additionalProperties: false,
+  required: [...COMMON_LOCALIZED.required, 'attribute_labels']
+};
+
+const BRANDING_1_0_OVERLAY_SCHEMA: Schema = {
+  id: OverlaySpecType.BRANDING_1_0,
+  type: 'object',
+  properties: {
+    type: { const: OverlaySpecType.BRANDING_1_0 },
+    ...COMMON.properties,
+    logo: { type: 'string' },
+    primary_background_color: { type: 'string' },
+    primary_attribute: { type: 'string' },
+    secondary_attribute: { type: 'string' }
+  },
+  required: [...COMMON.required, 'logo', 'primary_background_color']
+};
+
+const BRANDING_1_1_OVERLAY_SCHEMA: Schema = {
+  id: OverlaySpecType.BRANDING_1_1,
+  type: 'object',
+  properties: {
+    type: { const: OverlaySpecType.BRANDING_1_1 },
+    ...COMMON.properties,
+    language: { type: 'string' },
+    theme: { type: 'string' },
+    logo: {
+      type: 'string',
+      pattern: '^data\\:'
+    },
+    primary_background_color: { type: 'string' },
+    primary_field: { type: 'string' },
+    secondary_field: { type: 'string' }
+  },
+  additionalProperties: false,
+  required: [...COMMON.required, 'logo', 'primary_background_color']
+};
+
+const DATA_SOURCE_OVERLAY_SCHEMA: Schema = {
+  id: OverlaySpecType.DATA_SOURCE_1_0,
+  type: 'object',
+  properties: {
+    type: { const: OverlaySpecType.DATA_SOURCE_1_0 },
+    ...COMMON.properties,
+    format: { type: 'string' },
+    attribute_sources: {
+      type: 'object',
+      additionalProperties: { type: 'string' }
+    }
+  },
+  additionalProperties: false,
+  required: [...COMMON.required, 'format', 'attribute_sources']
+};
+
+const CLUSTER_ORDERING_OVERLAY_SCHEMA: Schema = {
+  id: OverlaySpecType.CLUSTER_ORDERING_1_0,
+  type: 'object',
+  properties: {
+    type: { const: OverlaySpecType.CLUSTER_ORDERING_1_0 },
+    ...COMMON_LOCALIZED.properties,
+    cluster_order: {
+      type: 'object',
+      additionalProperties: { type: 'integer' }
+    },
+    attribute_cluster_order: {
+      type: 'object',
+      additionalProperties: {
+        type: 'object',
+        additionalProperties: { type: 'integer' }
+      }
+    },
+    cluster_labels: {
+      type: 'object',
+      additionalProperties: { type: 'string' }
+    }
+  },
+  additionalProperties: false,
+  required: [...COMMON_LOCALIZED.required, 'cluster_order', 'attribute_cluster_order']
+};
+
+const KNOWN_OVERLAY_SCHEMAS = [
+  META_OVERLAY_SCHEMA,
+  FORMAT_OVERLAY_SCHEMA,
+  STANDARD_OVERLAY_SCHEMA,
+  LABEL_OVERLAY_SCHEMA,
+  BRANDING_1_0_OVERLAY_SCHEMA,
+  BRANDING_1_1_OVERLAY_SCHEMA,
+  DATA_SOURCE_OVERLAY_SCHEMA,
+  CLUSTER_ORDERING_OVERLAY_SCHEMA
+];
+
+const UNKNOWN_OVERLAY_SCHEMA: Schema = {
   id: 'UnknownOverlay',
   type: 'object',
   properties: {
     type: {
-      type: 'string',
-      not: {
-        oneOf: KNOWN_OVERLAY_SCHEMAS.map((schema) => ({
-          const: schema.id
-        }))
-      }
+      type: 'string'
     },
     capture_base: { type: 'string' },
     language: { type: 'string' }
   },
   additionalProperties: true,
   required: ['type', 'capture_base']
+};
+
+export const OVERLAY_SCHEMA: Schema = {
+  id: 'Overlay',
+  type: 'object',
+  properties: {
+    type: { type: 'string' },
+    capture_base: { type: 'string' }
+  },
+  required: ['type', 'capture_base'],
+  allOf: KNOWN_OVERLAY_SCHEMAS.map((schema) => ({
+    if: {
+      properties: {
+        type: { const: schema.id }
+      }
+    },
+    then: schema,
+    else: UNKNOWN_OVERLAY_SCHEMA
+  }))
 };
