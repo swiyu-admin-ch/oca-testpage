@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
-import { JsonObject } from '../model/top-level';
+import { JsonObject } from '../model';
 
 @Component({
   selector: 'app-editor',

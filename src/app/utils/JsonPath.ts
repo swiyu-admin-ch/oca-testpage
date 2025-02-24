@@ -1,4 +1,4 @@
-import { JsonObject } from '../model/top-level';
+import { JsonObject } from '../model';
 
 /* Simple JsonPath implementation
  * only support:

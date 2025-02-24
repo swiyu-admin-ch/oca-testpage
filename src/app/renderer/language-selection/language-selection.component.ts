@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgFor } from '@angular/common';
 import { OCAService } from '../../services/oca/oca.service';
-import { OCABundle } from '../../model/top-level';
+import { OCABundle } from '../../model';
 
 @Component({
   selector: 'app-language-selection',

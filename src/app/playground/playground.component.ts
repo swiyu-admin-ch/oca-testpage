@@ -5,7 +5,7 @@ import { DataService } from '../services/data/data.service';
 import { FormsModule } from '@angular/forms';
 import { Renderer, getRenderer, getRendererSelectionOptions } from '../renderer';
 import { NgFor } from '@angular/common';
-import { JsonObject, OCABundle } from '../model/top-level';
+import { JsonObject, OCABundle } from '../model';
 import { ErrorComponent } from '../renderer/error/error.component';
 
 @Component({
@@ -31,6 +31,10 @@ export class PlaygroundComponent {
   // Fields
   get rendererSelectionOptions() {
     return getRendererSelectionOptions();
+  }
+
+  get examples() {
+    return this.dataService.getExamples();
   }
 
   loadExampleState = '';
@@ -70,15 +74,9 @@ export class PlaygroundComponent {
   }
 
   loadExample(event: Event) {
-    let example = null;
-    switch (this.loadExampleState) {
-      case 'person-id':
-        example = this.dataService.getPersonExample();
-        break;
-      case 'pets':
-        example = this.dataService.getPetsExample();
-        break;
-    }
+    const example = this.dataService
+      .getExamples()
+      .find((example) => example.id === this.loadExampleState);
 
     if (example) {
       this.inputModel = example.input;

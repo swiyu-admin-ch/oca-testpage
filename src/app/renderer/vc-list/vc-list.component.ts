@@ -2,8 +2,7 @@ import { Component, Input } from '@angular/core';
 import { OCAService } from '../../services/oca/oca.service';
 import JsonPath from '../../utils/JsonPath';
 import Colors from '../../utils/Colors';
-import { OverlayTypes } from '../../model/oca-capture';
-import { JsonObject, OCABundle } from '../../model/top-level';
+import { OverlayTypes, JsonObject, OCABundle } from '../../model';
 import { LanguageSelectionComponent } from '../language-selection/language-selection.component';
 
 @Component({

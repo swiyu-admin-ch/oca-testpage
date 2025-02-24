@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { computeSHA256CESRDigest } from '../../utils/CESR';
-import { CaptureBase, Overlay, OverlaySpecType } from '../../model/oca-capture';
-import { OCABundle } from '../../model/top-level';
+import { CaptureBase, Overlay, OverlaySpecType, OCABundle } from '../../model';
 
 @Injectable({
   providedIn: 'root'
@@ -132,8 +131,8 @@ export class OCAService {
     const captureBaseReferences = captureBases.reduce<string[]>(
       (aggr, base) => [
         ...aggr,
-        ...Object.values(base.attributes).filter(
-          (value) => value.startsWith('refs:') || value.startsWith('Array[refs:')
+        ...Object.values(base.attributes).filter((value): value is string =>
+          Boolean(value?.startsWith('refs:') || value?.startsWith('Array[refs:'))
         )
       ],
       []

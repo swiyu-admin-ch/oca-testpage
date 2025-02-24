@@ -6,8 +6,9 @@
             <label class="text-gray-800">Load Example: </label>
             <select [(ngModel)]="loadExampleState" (change)="loadExample($event)">
                 <option value=""></option>
-                <option value="person-id">Person ID</option>
-                <option value="pets">Pet Permit</option>
+                <option *ngFor="let opt of examples" [value]="opt.id">
+                    {{ opt.label }}
+                </option>
             </select>
         </div>
         <app-editor class="flex-1" [code]="inputModel" (codeChanged)="onInputChanged($event)" (invalid)="onInputError($event)"></app-editor>
@@ -28,7 +29,7 @@
             <select [(ngModel)]="viewRenderSelection" (change)="updateViewRenderer($event)">
                 <option *ngFor="let opt of rendererSelectionOptions" [value]="opt.key">
                     {{ opt.label }}
-                  </option>
+                </option>
             </select>
         </div>
         <div class="flex flex-1 justify-center items-center">

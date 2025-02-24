@@ -6,9 +6,10 @@ import {
   ClusterOrderingOverlay,
   LabelOverlay,
   OverlayTypes,
-  StandardOverlay
-} from '../../model/oca-capture';
-import { JsonObject, OCABundle } from '../../model/top-level';
+  StandardOverlay,
+  JsonObject,
+  OCABundle
+} from '../../model';
 import { LanguageSelectionComponent } from '../language-selection/language-selection.component';
 
 @Component({
@@ -122,10 +123,13 @@ export class VcDetailComponent {
                 value: `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`
               });
             }
-          } else if (attributeType.startsWith('refs:') || attributeType.startsWith('Array[refs:')) {
+          } else if (
+            attributeType?.startsWith('refs:') ||
+            attributeType?.startsWith('Array[refs:')
+          ) {
             const refDigest = attributeType.startsWith('refs:')
-              ? captureBase.attributes[attributeValue].slice(5, -1)
-              : captureBase.attributes[attributeValue].slice(11, -1);
+              ? attributeType.slice(5, -1)
+              : attributeType.slice(11, -1);
 
             const refCaptureBase = this.ocaService.getCaptureBaseByDigest(this.oca, refDigest);
             const refClusterOrder = this.ocaService.getOverlayByDigest(
