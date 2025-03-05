@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --configuration=production --base-href=.",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "prettier --check \"src/**/*.{js,json,ts}\"",
@@ -20,8 +20,8 @@
     "@angular/platform-browser": "^18.2.0",
     "@angular/platform-browser-dynamic": "^18.2.0",
     "@angular/router": "^18.2.0",
+    "ajv": "^8.17.1",
     "canonicalize": "^2.0.0",
-    "jsonschema": "^1.5.0",
     "monaco-editor": "^0.50.0",
     "ngx-monaco-editor-v2": "^18.1.0",
     "rxjs": "~7.8.0",

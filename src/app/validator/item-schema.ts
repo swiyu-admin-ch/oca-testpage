@@ -1,10 +1,10 @@
-import { Schema } from 'jsonschema';
+import { SchemaObject } from 'ajv';
 import { CaptureBaseSpecType, OverlaySpecType } from '../model';
 
-const SAID_PATTERN = /^[A-Za-z0-9_\-]+$/;
+const SAID_PATTERN = /^[A-Za-z0-9_\-]+$/.source;
 
-export const CAPTURE_BASE_SCHEMA: Schema = {
-  id: CaptureBaseSpecType.BASE_1_0,
+export const CAPTURE_BASE_SCHEMA: SchemaObject = {
+  $id: CaptureBaseSpecType.BASE_1_0,
   type: 'object',
   properties: {
     type: { const: CaptureBaseSpecType.BASE_1_0 },
@@ -43,8 +43,8 @@ const COMMON_LOCALIZED = {
   required: [...COMMON.required, 'language']
 };
 
-const META_OVERLAY_SCHEMA: Schema = {
-  id: OverlaySpecType.META_1_0,
+const META_OVERLAY_SCHEMA: SchemaObject = {
+  $id: OverlaySpecType.META_1_0,
   type: 'object',
   properties: {
     type: { const: OverlaySpecType.META_1_0 },
@@ -56,8 +56,8 @@ const META_OVERLAY_SCHEMA: Schema = {
   required: [...COMMON_LOCALIZED.required, 'name']
 };
 
-const FORMAT_OVERLAY_SCHEMA: Schema = {
-  id: OverlaySpecType.FORMAT_1_0,
+const FORMAT_OVERLAY_SCHEMA: SchemaObject = {
+  $id: OverlaySpecType.FORMAT_1_0,
   type: 'object',
   properties: {
     type: { const: OverlaySpecType.FORMAT_1_0 },
@@ -71,8 +71,8 @@ const FORMAT_OVERLAY_SCHEMA: Schema = {
   required: [...COMMON.required, 'attribute_formats']
 };
 
-const STANDARD_OVERLAY_SCHEMA: Schema = {
-  id: OverlaySpecType.STANDARD_1_0,
+const STANDARD_OVERLAY_SCHEMA: SchemaObject = {
+  $id: OverlaySpecType.STANDARD_1_0,
   type: 'object',
   properties: {
     type: { const: OverlaySpecType.STANDARD_1_0 },
@@ -86,8 +86,8 @@ const STANDARD_OVERLAY_SCHEMA: Schema = {
   required: [...COMMON.required, 'attr_standards']
 };
 
-const LABEL_OVERLAY_SCHEMA: Schema = {
-  id: OverlaySpecType.LABEL_1_0,
+const LABEL_OVERLAY_SCHEMA: SchemaObject = {
+  $id: OverlaySpecType.LABEL_1_0,
   type: 'object',
   properties: {
     type: { const: OverlaySpecType.LABEL_1_0 },
@@ -101,8 +101,8 @@ const LABEL_OVERLAY_SCHEMA: Schema = {
   required: [...COMMON_LOCALIZED.required, 'attribute_labels']
 };
 
-const BRANDING_1_0_OVERLAY_SCHEMA: Schema = {
-  id: OverlaySpecType.BRANDING_1_0,
+const BRANDING_1_0_OVERLAY_SCHEMA: SchemaObject = {
+  $id: OverlaySpecType.BRANDING_1_0,
   type: 'object',
   properties: {
     type: { const: OverlaySpecType.BRANDING_1_0 },
@@ -115,8 +115,9 @@ const BRANDING_1_0_OVERLAY_SCHEMA: Schema = {
   required: [...COMMON.required, 'logo', 'primary_background_color']
 };
 
-const BRANDING_1_1_OVERLAY_SCHEMA: Schema = {
-  id: OverlaySpecType.BRANDING_1_1,
+const IMAGE_PATTERN = /^data:.+;base64,/.source;
+const BRANDING_1_1_OVERLAY_SCHEMA: SchemaObject = {
+  $id: OverlaySpecType.BRANDING_1_1,
   type: 'object',
   properties: {
     type: { const: OverlaySpecType.BRANDING_1_1 },
@@ -125,7 +126,7 @@ const BRANDING_1_1_OVERLAY_SCHEMA: Schema = {
     theme: { type: 'string' },
     logo: {
       type: 'string',
-      pattern: /^data\:.+;base64,/
+      pattern: IMAGE_PATTERN
     },
     primary_background_color: { type: 'string' },
     primary_field: { type: 'string' },
@@ -135,8 +136,8 @@ const BRANDING_1_1_OVERLAY_SCHEMA: Schema = {
   required: [...COMMON.required, 'logo', 'primary_background_color']
 };
 
-const DATA_SOURCE_OVERLAY_SCHEMA: Schema = {
-  id: OverlaySpecType.DATA_SOURCE_1_0,
+const DATA_SOURCE_OVERLAY_SCHEMA: SchemaObject = {
+  $id: OverlaySpecType.DATA_SOURCE_1_0,
   type: 'object',
   properties: {
     type: { const: OverlaySpecType.DATA_SOURCE_1_0 },
@@ -151,8 +152,8 @@ const DATA_SOURCE_OVERLAY_SCHEMA: Schema = {
   required: [...COMMON.required, 'format', 'attribute_sources']
 };
 
-const CLUSTER_ORDERING_OVERLAY_SCHEMA: Schema = {
-  id: OverlaySpecType.CLUSTER_ORDERING_1_0,
+const CLUSTER_ORDERING_OVERLAY_SCHEMA: SchemaObject = {
+  $id: OverlaySpecType.CLUSTER_ORDERING_1_0,
   type: 'object',
   properties: {
     type: { const: OverlaySpecType.CLUSTER_ORDERING_1_0 },
@@ -188,8 +189,7 @@ const KNOWN_OVERLAY_SCHEMAS = [
   CLUSTER_ORDERING_OVERLAY_SCHEMA
 ];
 
-const UNKNOWN_OVERLAY_SCHEMA: Schema = {
-  id: 'UnknownOverlay',
+const UNKNOWN_OVERLAY_SCHEMA: SchemaObject = {
   type: 'object',
   properties: {
     type: {
@@ -202,8 +202,8 @@ const UNKNOWN_OVERLAY_SCHEMA: Schema = {
   required: ['type', 'capture_base']
 };
 
-export const OVERLAY_SCHEMA: Schema = {
-  id: 'Overlay',
+export const OVERLAY_SCHEMA: SchemaObject = {
+  $id: 'Overlay',
   type: 'object',
   properties: {
     type: { type: 'string' },
@@ -216,7 +216,7 @@ export const OVERLAY_SCHEMA: Schema = {
   allOf: KNOWN_OVERLAY_SCHEMAS.map((schema) => ({
     if: {
       properties: {
-        type: { const: schema.id }
+        type: { const: schema.$id }
       }
     },
     then: schema,

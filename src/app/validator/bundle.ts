@@ -1,20 +1,19 @@
-import { Validator, Schema } from 'jsonschema';
+import Ajv, { SchemaObject } from 'ajv';
 import { CAPTURE_BASE_SCHEMA, OVERLAY_SCHEMA } from './item-schema';
 import { OCABundle } from '../model';
 import { calculateCaptureBaseDigest, getRootCaptureBase } from '../utils/OCA';
 
-const jsonSchemaValidator = new Validator();
-jsonSchemaValidator.addSchema(CAPTURE_BASE_SCHEMA);
-jsonSchemaValidator.addSchema(OVERLAY_SCHEMA);
+const jsonSchemaValidator = new Ajv();
+jsonSchemaValidator.addSchema([CAPTURE_BASE_SCHEMA, OVERLAY_SCHEMA]);
 
-const bundleSchema: Schema = {
-  id: 'OCABundle',
+const bundleSchema: SchemaObject = {
+  $id: 'OCABundle',
   type: 'object',
   properties: {
     capture_bases: {
       type: 'array',
       items: {
-        $ref: CAPTURE_BASE_SCHEMA.id
+        $ref: CAPTURE_BASE_SCHEMA.$id
       },
       minItems: 1,
       uniqueItems: true
@@ -22,7 +21,7 @@ const bundleSchema: Schema = {
     overlays: {
       type: 'array',
       items: {
-        $ref: OVERLAY_SCHEMA.id
+        $ref: OVERLAY_SCHEMA.$id
       },
       uniqueItems: true
     }
@@ -32,10 +31,13 @@ const bundleSchema: Schema = {
 
 export async function validateOCABundle(data: unknown) {
   // validate against JSON schema
-  jsonSchemaValidator.validate(data, bundleSchema, {
-    throwError: true,
-    required: true
-  });
+  const validate = jsonSchemaValidator.compile(bundleSchema);
+  if (!validate(data)) {
+    const error = validate.errors?.[0];
+    if (error) {
+      throw new Error(`JSON-schema validation failed: ${error.instancePath} ${error.message}`);
+    }
+  }
 
   const bundle = data as OCABundle;
 
