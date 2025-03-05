@@ -101,7 +101,7 @@ export class VcDetailComponent {
           }
 
           const attributeType = captureBase.attributes[attributeValue];
-          if (attributeType === 'Number') {
+          if (attributeType === 'Numeric') {
             result.push({ type: 'text', value: values[i][attributeValue] });
           } else if (attributeType === 'Text') {
             if (standard && standard.attr_standards[attributeValue] === 'urn:ietf:rfc:2397') {
