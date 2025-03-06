@@ -8,6 +8,9 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideMonacoEditor()
+    provideMonacoEditor({
+      // https://github.com/microsoft/monaco-editor/issues/4778#issuecomment-2607849212
+      baseUrl: window.location.origin + '/assets/monaco/min/vs'
+    })
   ]
 };
