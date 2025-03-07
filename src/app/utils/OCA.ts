@@ -1,6 +1,9 @@
 import { CaptureBase, OCABundle, Overlay, OverlaySpecType } from '../model';
 import { computeSHA256CESRDigest } from './CESR';
 
+/**
+ * @throws {Error}
+ */
 export function getRootCaptureBase(oca: OCABundle): CaptureBase {
   const captureBases = oca.capture_bases;
 
