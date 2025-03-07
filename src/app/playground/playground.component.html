@@ -31,7 +31,7 @@
                 </option>
             </select>
         </div>
-        <app-language-selection [oca]="ocaModel" (languageChanged)="onLanguage($event)"></app-language-selection>
+        <app-language-selection [oca]="ocaUserModifications" (languageChanged)="onLanguage($event)"></app-language-selection>
         <div class="flex flex-1 justify-center items-center">
             <ng-container #viewRenderComponent></ng-container>
         </div>

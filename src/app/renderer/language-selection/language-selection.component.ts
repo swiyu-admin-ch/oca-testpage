@@ -19,8 +19,8 @@ export class LanguageSelectionComponent {
   @Input({ required: true })
   set oca(oca: OCABundle) {
     this.selectionOptions = this.ocaService.getLanguages(oca);
-    this.selected = this.selectionOptions[0];
-    if (this.selected) {
+    if (!this.selectionOptions.includes(this.selected)) {
+      this.selected = this.selectionOptions[0];
       this.onChanged();
     }
   }
