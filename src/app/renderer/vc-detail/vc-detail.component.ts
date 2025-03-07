@@ -11,11 +11,12 @@ import {
   OCABundle
 } from '../../model';
 import { getOverlayByDigest, getRootCaptureBase } from '../../utils/OCA';
+import { ErrorComponent } from '../error/error.component';
 
 @Component({
   selector: 'app-vc-detail',
   standalone: true,
-  imports: [],
+  imports: [ErrorComponent],
   templateUrl: './vc-detail.component.html',
   styleUrl: './vc-detail.component.css'
 })
@@ -25,42 +26,56 @@ export class VcDetailComponent {
   @Input({ required: true }) language!: string;
 
   vcDisplay: Array<{ type: string; value: string }> = [];
+  error: Error | undefined;
 
   constructor(private ocaService: OCAService) {}
 
   ngOnInit() {
-    this.update();
+    try {
+      this.error = undefined;
+      this.update();
+    } catch (e) {
+      this.error = e as Error;
+    }
   }
 
-  // FIXME: Error handling
   private update() {
     const captureBase = getRootCaptureBase(this.oca);
     const dataSource = this.ocaService.getOverlay(this.oca, OverlayTypes.DATA_SOURCE);
-    const labels = this.ocaService.getOverlay(this.oca, OverlayTypes.LABEL, this.language);
+    if (!dataSource) {
+      throw new Error('No dataSource overlay found');
+    }
+
     const clusterOrder = this.ocaService.getOverlay(
       this.oca,
       OverlayTypes.CLUSTER_ORDERING,
       this.language
     );
+    if (!clusterOrder) {
+      throw new Error(`No clusterOrder overlay for language ${this.language} found`);
+    }
+
+    const labels = this.ocaService.getOverlay(this.oca, OverlayTypes.LABEL, this.language);
     const standard = this.ocaService.getOverlay(this.oca, OverlayTypes.STANDARD);
 
-    const mappedValues: Record<string, any> = {};
-    if (dataSource) {
-      for (const key in captureBase.attributes) {
+    const mappedValues = Object.keys(captureBase.attributes).reduce<Record<string, any>>(
+      (aggr, key) => {
         const queryResult = JsonPath.query(this.input, dataSource.attribute_sources[key]);
-        mappedValues[key] = queryResult.length > 0 ? queryResult[0] : '';
-      }
-    }
+        return {
+          ...aggr,
+          [key]: queryResult.length ? queryResult[0] : ''
+        };
+      },
+      {}
+    );
 
-    if (clusterOrder) {
-      this.vcDisplay = this.parseClusterOrder(
-        captureBase,
-        mappedValues,
-        clusterOrder,
-        standard,
-        labels
-      );
-    }
+    this.vcDisplay = this.parseClusterOrder(
+      captureBase,
+      mappedValues,
+      clusterOrder,
+      standard,
+      labels
+    );
   }
 
   private parseClusterOrder(

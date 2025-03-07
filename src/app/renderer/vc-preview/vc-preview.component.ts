@@ -69,11 +69,11 @@ export class VcPreviewComponent implements OnInit {
       : '#000000';
 
     if ('primary_field' in branding && branding.primary_field) {
-      this.vcSubtitle = branding.primary_field.replace(/\{\{(.*?)\}\}/g, (_, p1) => {
-        if (p1 in mappedValues) {
-          return mappedValues[p1];
+      this.vcSubtitle = branding.primary_field.replace(/\{\{(.*?)\}\}/g, (_, param) => {
+        if (param in mappedValues) {
+          return mappedValues[param];
         }
-        throw new Error(`Primary field placeholder "${p1}" not found`);
+        throw new Error(`Primary field placeholder "${param}" not found`);
       });
     }
   }
