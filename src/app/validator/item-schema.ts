@@ -3,6 +3,26 @@ import { CaptureBaseSpecType, OverlaySpecType } from '../model';
 
 const SAID_PATTERN = /^[A-Za-z0-9_\-]+$/.source;
 
+const CAPTURE_BASE_ATTRIBUTE: SchemaObject = {
+  $id: 'CaptureBaseAttribute',
+  anyOf: [
+    {
+      $id: 'BaseAttribute',
+      enum: ['Text', 'DateTime', 'Numeric']
+    },
+    {
+      $id: 'RefAttribute',
+      type: 'string',
+      pattern: /^refs:[A-Za-z0-9_\-]+$/.source
+    },
+    {
+      $id: 'ArrayAttribute',
+      type: 'string',
+      pattern: /^Array\[.+\]$/.source
+    }
+  ]
+};
+
 export const CAPTURE_BASE_SCHEMA: SchemaObject = {
   $id: CaptureBaseSpecType.BASE_1_0,
   type: 'object',
@@ -15,7 +35,7 @@ export const CAPTURE_BASE_SCHEMA: SchemaObject = {
     classification: { type: 'string' },
     attributes: {
       type: 'object',
-      additionalProperties: { type: 'string' }
+      additionalProperties: CAPTURE_BASE_ATTRIBUTE
     },
     flagged_attributes: {
       type: 'array',
