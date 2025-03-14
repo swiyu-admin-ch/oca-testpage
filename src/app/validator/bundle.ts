@@ -2,6 +2,7 @@ import Ajv, { SchemaObject } from 'ajv';
 import { CAPTURE_BASE_SCHEMA, OVERLAY_SCHEMA } from './item-schema';
 import { OCABundle } from '../model';
 import { calculateCaptureBaseDigest, getRootCaptureBase } from '../utils/OCA';
+import { OCAOverlayError, validateOverlay } from './overlay';
 
 const jsonSchemaValidator = new Ajv();
 jsonSchemaValidator.addSchema([CAPTURE_BASE_SCHEMA, OVERLAY_SCHEMA]);
@@ -60,7 +61,7 @@ export async function validateOCABundle(data: unknown) {
     throw new OCAValidationError('/capture_bases', e instanceof Error ? e.message : String(e));
   }
 
-  // validate digests
+  // validate digests of capture base
   for (const [index, base] of bundle.capture_bases.entries()) {
     const correctDigest = await calculateCaptureBaseDigest(base);
     if (base.digest !== correctDigest) {
@@ -70,12 +71,25 @@ export async function validateOCABundle(data: unknown) {
       );
     }
   }
+
+  // validate overlays
   for (const [index, overlay] of bundle.overlays.entries()) {
-    if (!bundle.capture_bases.some((base) => base.digest === overlay.capture_base)) {
+    const base = bundle.capture_bases.find((base) => base.digest === overlay.capture_base);
+    if (!base) {
       throw new OCAValidationError(
         `/overlays/${index}/capture_base`,
         `Missing overlay capture_base reference: "${overlay.capture_base}"`
       );
+    }
+
+    try {
+      validateOverlay(overlay, base);
+    } catch (e) {
+      if (e instanceof OCAOverlayError) {
+        throw new OCAValidationError(`/overlays/${index}/${e.field}`, e.message);
+      } else {
+        throw new OCAValidationError(`/overlays/${index}`, String(e));
+      }
     }
   }
 }

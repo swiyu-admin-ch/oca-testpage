@@ -121,6 +121,7 @@ const LABEL_OVERLAY_SCHEMA: SchemaObject = {
   required: [...COMMON_LOCALIZED.required, 'attribute_labels']
 };
 
+const HEX_COLOR_CODE_PATTERN = /^#[A-Fa-f0-9]{6}$/.source;
 const BRANDING_1_0_OVERLAY_SCHEMA: SchemaObject = {
   $id: OverlaySpecType.BRANDING_1_0,
   type: 'object',
@@ -128,7 +129,7 @@ const BRANDING_1_0_OVERLAY_SCHEMA: SchemaObject = {
     type: { const: OverlaySpecType.BRANDING_1_0 },
     ...COMMON.properties,
     logo: { type: 'string' },
-    primary_background_color: { type: 'string' },
+    primary_background_color: { type: 'string', pattern: HEX_COLOR_CODE_PATTERN },
     primary_attribute: { type: 'string' },
     secondary_attribute: { type: 'string' }
   },
@@ -144,11 +145,8 @@ const BRANDING_1_1_OVERLAY_SCHEMA: SchemaObject = {
     ...COMMON.properties,
     language: { type: 'string' },
     theme: { type: 'string' },
-    logo: {
-      type: 'string',
-      pattern: IMAGE_PATTERN
-    },
-    primary_background_color: { type: 'string' },
+    logo: { type: 'string', pattern: IMAGE_PATTERN },
+    primary_background_color: { type: 'string', pattern: HEX_COLOR_CODE_PATTERN },
     primary_field: { type: 'string' },
     secondary_field: { type: 'string' }
   },
