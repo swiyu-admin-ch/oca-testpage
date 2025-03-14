@@ -29,30 +29,53 @@ const bundleSchema: SchemaObject = {
   required: ['capture_bases', 'overlays']
 };
 
+export class OCAValidationError extends Error {
+  path: string;
+  constructor(path: string, message: string) {
+    super(message);
+    this.path = path;
+    Object.setPrototypeOf(this, OCAValidationError.prototype);
+  }
+}
+
 export async function validateOCABundle(data: unknown) {
   // validate against JSON schema
   const validate = jsonSchemaValidator.compile(bundleSchema);
   if (!validate(data)) {
     const error = validate.errors?.[0];
     if (error) {
-      throw new Error(`JSON-schema validation failed: ${error.instancePath} ${error.message}`);
+      throw new OCAValidationError(
+        error.instancePath,
+        `JSON-schema validation failed(${error.instancePath}): ${error.message}`
+      );
     }
   }
 
   const bundle = data as OCABundle;
 
   // validate root capture exists
-  getRootCaptureBase(bundle);
+  try {
+    getRootCaptureBase(bundle);
+  } catch (e) {
+    throw new OCAValidationError('/capture_bases', e instanceof Error ? e.message : String(e));
+  }
 
   // validate digests
-  for (const base of bundle.capture_bases) {
-    if (base.digest !== (await calculateCaptureBaseDigest(base))) {
-      throw new Error(`Invalid capture_base digest: ${base.digest}`);
+  for (const [index, base] of bundle.capture_bases.entries()) {
+    const correctDigest = await calculateCaptureBaseDigest(base);
+    if (base.digest !== correctDigest) {
+      throw new OCAValidationError(
+        `/capture_bases/${index}/digest`,
+        `Invalid capture_base digest, it should be: "${correctDigest}"`
+      );
     }
   }
-  for (const overlay of bundle.overlays) {
+  for (const [index, overlay] of bundle.overlays.entries()) {
     if (!bundle.capture_bases.some((base) => base.digest === overlay.capture_base)) {
-      throw new Error(`Missing overlay capture_base reference: ${overlay.capture_base}`);
+      throw new OCAValidationError(
+        `/overlays/${index}/capture_base`,
+        `Missing overlay capture_base reference: "${overlay.capture_base}"`
+      );
     }
   }
 }

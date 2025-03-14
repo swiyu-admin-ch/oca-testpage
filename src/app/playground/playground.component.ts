@@ -1,5 +1,5 @@
 import { Component, ViewChild, ViewContainerRef } from '@angular/core';
-import { EditorComponent } from '../editor/editor.component';
+import { EditorComponent, ErrorMark } from '../editor/editor.component';
 import { OCAService } from '../services/oca/oca.service';
 import { DataService } from '../services/data/data.service';
 import { FormsModule } from '@angular/forms';
@@ -7,7 +7,7 @@ import { Renderer, getRenderer, getRendererSelectionOptions } from '../renderer'
 import { NgFor } from '@angular/common';
 import { JsonObject, OCABundle } from '../model';
 import { ErrorComponent } from '../renderer/error/error.component';
-import { validateOCABundle } from '../validator/bundle';
+import { OCAValidationError, validateOCABundle } from '../validator/bundle';
 import { LanguageSelectionComponent } from '../renderer/language-selection/language-selection.component';
 
 @Component({
@@ -29,6 +29,7 @@ export class PlaygroundComponent {
   ocaModel!: OCABundle;
   ocaUserModifications!: OCABundle;
   ocaError: string | undefined;
+  ocaErrorMark: ErrorMark | undefined;
 
   // Fields
   get rendererSelectionOptions() {
@@ -71,11 +72,15 @@ export class PlaygroundComponent {
 
   onOCAChanged(value: JsonObject) {
     this.ocaError = undefined;
+    this.ocaErrorMark = undefined;
     this.ocaUserModifications = value as OCABundle;
 
     validateOCABundle(value)
       .catch((e) => {
-        this.ocaError = `Bundle validation: ${e}`;
+        if (e instanceof OCAValidationError) {
+          this.ocaErrorMark = e;
+        }
+        this.ocaError = `Bundle validation: ${e instanceof Error ? e.message : e}`;
       })
       .finally(() => this.updateViewRenderer());
   }
