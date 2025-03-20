@@ -63,6 +63,10 @@ export class EditorComponent {
     ]);
   }
 
+  updateLayout() {
+    this.getCodeEditor()?.layout();
+  }
+
   @ViewChild('editor', { read: MonacoEditor }) editor: MonacoEditor | undefined;
   getModel() {
     return this.getCodeEditor()?.getModel();

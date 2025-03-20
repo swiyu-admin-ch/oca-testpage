@@ -1,4 +1,4 @@
-import { Component, ViewChild, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, Component, ViewChild, ViewContainerRef } from '@angular/core';
 import { EditorComponent, ErrorMark } from '../editor/editor.component';
 import { OCAService } from '../services/oca/oca.service';
 import { DataService } from '../services/data/data.service';
@@ -9,6 +9,7 @@ import { JsonObject, OCABundle } from '../model';
 import { ErrorComponent } from '../renderer/error/error.component';
 import { OCAValidationError, validateOCABundle } from '../validator/bundle';
 import { LanguageSelectionComponent } from '../renderer/language-selection/language-selection.component';
+import { AngularSplitModule, SplitComponent } from 'angular-split';
 
 @Component({
   selector: 'app-playground',
@@ -16,11 +17,11 @@ import { LanguageSelectionComponent } from '../renderer/language-selection/langu
     class: 'h-full'
   },
   standalone: true,
-  imports: [FormsModule, EditorComponent, NgFor, LanguageSelectionComponent],
+  imports: [FormsModule, EditorComponent, NgFor, LanguageSelectionComponent, AngularSplitModule],
   templateUrl: './playground.component.html',
   styleUrl: './playground.component.css'
 })
-export class PlaygroundComponent {
+export class PlaygroundComponent implements AfterViewInit {
   // Internal properties
   inputModel!: JsonObject;
   inputUserModifications!: JsonObject;
@@ -45,6 +46,16 @@ export class PlaygroundComponent {
   @ViewChild('viewRenderComponent', { read: ViewContainerRef }) viewRenderComponent:
     | ViewContainerRef
     | undefined;
+
+  @ViewChild('split') split: SplitComponent | undefined;
+  @ViewChild('inputEditor') inputEditor: EditorComponent | undefined;
+  @ViewChild('ocaEditor') ocaEditor: EditorComponent | undefined;
+  ngAfterViewInit() {
+    this.split?.dragProgress$.subscribe(() => {
+      this.inputEditor?.updateLayout();
+      this.ocaEditor?.updateLayout();
+    });
+  }
 
   constructor(
     private ocaService: OCAService,
