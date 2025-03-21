@@ -6,38 +6,40 @@ import {
   getRootCaptureBase
 } from '../../utils/OCA';
 
+const DUMMY_CAPTURE_BASE: Readonly<CaptureBase> = {
+  type: CaptureBaseSpecType.BASE_1_0,
+  digest: 'IEsMrJ1buvWSv-Lh_yooVZ22PY6fUKnDt19u6-Y8vKwG',
+  attributes: {
+    firstname: 'Text',
+    lastname: 'Text'
+  }
+};
+
+const NESTED_DUMMY_CAPTURE_BASE: Readonly<CaptureBase> = {
+  type: CaptureBaseSpecType.BASE_1_0,
+  digest: '############################################',
+  attributes: {
+    title: 'Text',
+    items: 'Array[refs:############################################]'
+  }
+};
+
 @Injectable({
   providedIn: 'root'
 })
 export class OCAService {
-  private readonly captureBaseDummy: CaptureBase = {
-    type: CaptureBaseSpecType.BASE_1_0,
-    digest: 'IEsMrJ1buvWSv-Lh_yooVZ22PY6fUKnDt19u6-Y8vKwG',
-    attributes: {
-      firstname: 'Text',
-      lastname: 'Text'
-    }
-  };
-  private readonly nestedCaptureBaseDummy: CaptureBase = {
-    type: CaptureBaseSpecType.BASE_1_0,
-    digest: '############################################',
-    attributes: {
-      title: 'Test',
-      items: 'Array[refs:############################################]'
-    }
-  };
   constructor() {}
 
   initOCA(): OCABundle {
     return {
-      capture_bases: [this.captureBaseDummy],
+      capture_bases: [DUMMY_CAPTURE_BASE],
       overlays: []
     };
   }
 
   addCaptureBase(oca: OCABundle): OCABundle {
     return {
-      capture_bases: [...oca.capture_bases, this.nestedCaptureBaseDummy],
+      capture_bases: [...oca.capture_bases, NESTED_DUMMY_CAPTURE_BASE],
       overlays: oca.overlays
     };
   }
