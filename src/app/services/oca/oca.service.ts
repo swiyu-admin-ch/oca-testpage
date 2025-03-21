@@ -43,13 +43,26 @@ export class OCAService {
   }
 
   async computeDigests(oca: OCABundle): Promise<OCABundle> {
+    const oldToNewMapping: Record<string, string> = {};
+
     const capture_bases = [];
     for (const base of oca.capture_bases) {
       const digest = await calculateCaptureBaseDigest(base);
       capture_bases.push({ ...base, digest });
+      if (digest != base.digest) {
+        oldToNewMapping[base.digest] = digest;
+      }
     }
 
-    return { capture_bases, overlays: oca.overlays };
+    const overlays = oca.overlays.map((curr) => {
+      if (curr.capture_base in oldToNewMapping) {
+        return { ...curr, capture_base: oldToNewMapping[curr.capture_base] };
+      } else {
+        return curr;
+      }
+    });
+
+    return { capture_bases, overlays };
   }
 
   getOverlay<Type extends OverlaySpecType>(
