@@ -7,6 +7,9 @@ import PersonOCA from './example/person.oca.json';
 import PetInput from './example/pet.input.json';
 import PetOCA from './example/pet.oca.json';
 
+import BetaIDHelvetiaInput from './example/betaid-helvetia.input.json';
+import BetaIDHelvetiaOCA from './example/betaid-helvetia.oca.json';
+
 export interface Example {
   id: string;
   label: string;
@@ -28,11 +31,18 @@ const PETS: Example = {
   oca: PetOCA as OCABundle
 };
 
+const BETAID_HELVETIA: Example = {
+  id: 'betaid-helvetia',
+  label: 'BetaID Helvatia',
+  input: BetaIDHelvetiaInput,
+  oca: BetaIDHelvetiaOCA as OCABundle
+};
+
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
   getExamples() {
-    return [PERSON_ID, PETS];
+    return [BETAID_HELVETIA, PERSON_ID, PETS];
   }
 }
