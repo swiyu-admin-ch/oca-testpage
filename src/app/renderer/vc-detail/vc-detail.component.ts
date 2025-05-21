@@ -119,13 +119,13 @@ export class VcDetailComponent {
           if (attributeType === 'Numeric') {
             result.push({ type: 'text', value: values[i][attributeValue] });
           } else if (attributeType === 'Text') {
-            if (standard && standard.attr_standards[attributeValue] === 'urn:ietf:rfc:2397') {
+            if (standard && (standard.attr_standards[attributeValue] === 'urn:ietf:rfc:2397' || standard.attr_standards[attributeValue] === 'urn:ietf:rfc:2083')) {
               result.push({ type: 'image', value: values[i][attributeValue] });
             } else {
               result.push({ type: 'text', value: values[i][attributeValue] });
             }
           } else if (attributeType === 'Binary') {
-            if (standard && standard.attr_standards[attributeValue] === 'urn:ietf:rfc:2397') {
+            if (standard && (standard.attr_standards[attributeValue] === 'urn:ietf:rfc:2397' || standard.attr_standards[attributeValue] === 'urn:ietf:rfc:2083')) {
               result.push({ type: 'image', value: values[i][attributeValue] });
             }
           } else if (attributeType === 'Boolean') {
