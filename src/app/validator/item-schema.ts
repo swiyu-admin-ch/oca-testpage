@@ -8,7 +8,7 @@ const CAPTURE_BASE_ATTRIBUTE: SchemaObject = {
   anyOf: [
     {
       $id: 'BaseAttribute',
-      enum: ['Text', 'DateTime', 'Numeric', 'Boolean']
+      enum: ['Text', 'DateTime', 'Numeric', 'Boolean', 'Binary']
     },
     {
       $id: 'RefAttribute',
