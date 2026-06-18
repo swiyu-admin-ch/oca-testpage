@@ -119,11 +119,17 @@ export class VcDetailComponent {
           if (attributeType === 'Numeric') {
             result.push({ type: 'text', value: values[i][attributeValue] });
           } else if (attributeType === 'Text') {
-            if (standard && standard.attr_standards[attributeValue] === 'urn:ietf:rfc:2397') {
+            if (standard && (standard.attr_standards[attributeValue] === 'urn:ietf:rfc:2397' || standard.attr_standards[attributeValue] === 'urn:ietf:rfc:2083')) {
               result.push({ type: 'image', value: values[i][attributeValue] });
             } else {
               result.push({ type: 'text', value: values[i][attributeValue] });
             }
+          } else if (attributeType === 'Binary') {
+            if (standard && (standard.attr_standards[attributeValue] === 'urn:ietf:rfc:2397' || standard.attr_standards[attributeValue] === 'urn:ietf:rfc:2083')) {
+              result.push({ type: 'image', value: values[i][attributeValue] });
+            }
+          } else if (attributeType === 'Boolean') {
+            result.push({ type: 'text', value: this.convertBoolean(values[i][attributeValue]) });
           } else if (attributeType === 'DateTime') {
             const timestamp = Date.parse(values[i][attributeValue]);
             if (!isNaN(timestamp)) {
@@ -178,5 +184,17 @@ export class VcDetailComponent {
     }
 
     return result;
+  }
+
+  private convertBoolean(value: any): string {
+    if(!value || value === 'undefined' || value === null || value === 'null' || value === '0' || value === 0 || value === false || value === 'false') {
+      return 'false';
+    }
+
+    if (value === 'true' || value === true || value === '1' || value === 1) {
+      return 'true';
+    }
+
+    return '---';
   }
 }
